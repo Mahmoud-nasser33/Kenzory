@@ -1,0 +1,223 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Kenzory design system — Egyptian heritage.
+ * Palette: parchment / sand, deep charcoal, muted terracotta, olive, gold.
+ * All colors are oklch semantic tokens. Never hardcode colors in components.
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-sand: var(--sand);
+  --color-parchment: var(--parchment);
+  --color-stone: var(--stone);
+  --color-terracotta: var(--terracotta);
+  --color-terracotta-foreground: var(--terracotta-foreground);
+  --color-olive: var(--olive);
+  --color-olive-foreground: var(--olive-foreground);
+  --color-gold: var(--gold);
+  --color-gold-foreground: var(--gold-foreground);
+  --color-verified: var(--verified);
+  --color-community: var(--community);
+  --color-review: var(--review);
+  --color-unverified: var(--unverified);
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Cormorant Garamond", ui-serif, Georgia, serif;
+  --font-arabic: "Noto Kufi Arabic", "Plus Jakarta Sans", sans-serif;
+  --shadow-soft: 0 1px 2px oklch(0.245 0.03 52 / 0.05), 0 8px 24px -12px oklch(0.245 0.03 52 / 0.18);
+  --shadow-lift: 0 2px 4px oklch(0.245 0.03 52 / 0.06), 0 24px 48px -20px oklch(0.245 0.03 52 / 0.32);
+}
+
+:root {
+  --radius: 0.75rem;
+  /* Sampled from the places themselves: sun-bleached limestone, mud-brick
+     adobe, Nile water, palm shade, desert dusk. */
+  --background: oklch(0.968 0.016 78);
+  --foreground: oklch(0.245 0.022 52);
+  --card: oklch(0.988 0.01 84);
+  --card-foreground: oklch(0.245 0.022 52);
+  --popover: oklch(0.988 0.01 84);
+  --popover-foreground: oklch(0.245 0.022 52);
+  /* mud-brick / adobe — the dominant material in the photography */
+  --primary: oklch(0.48 0.098 48);
+  --primary-foreground: oklch(0.98 0.012 86);
+  --secondary: oklch(0.925 0.026 74);
+  --secondary-foreground: oklch(0.32 0.03 52);
+  --muted: oklch(0.935 0.02 78);
+  --muted-foreground: oklch(0.505 0.026 58);
+  /* sunset terracotta on the mosque walls */
+  --accent: oklch(0.585 0.132 40);
+  --accent-foreground: oklch(0.98 0.012 86);
+  --destructive: oklch(0.52 0.18 27);
+  --destructive-foreground: oklch(0.98 0.01 88);
+  --border: oklch(0.878 0.024 74);
+  --input: oklch(0.878 0.024 74);
+  --ring: oklch(0.585 0.132 40);
+
+  --sand: oklch(0.925 0.036 76);
+  --parchment: oklch(0.958 0.022 82);
+  --stone: oklch(0.29 0.024 54);
+  --terracotta: oklch(0.585 0.132 40);
+  --terracotta-foreground: oklch(0.98 0.012 86);
+  /* Nile / palm — cooler green with a hint of water */
+  --olive: oklch(0.42 0.058 165);
+  --olive-foreground: oklch(0.975 0.015 88);
+  --gold: oklch(0.745 0.118 78);
+  --gold-foreground: oklch(0.245 0.022 52);
+  --verified: oklch(0.46 0.078 165);
+  --community: oklch(0.5 0.075 235);
+  --review: oklch(0.66 0.125 68);
+  --unverified: oklch(0.58 0.014 66);
+}
+
+.dark {
+  --background: oklch(0.185 0.016 54);
+  --foreground: oklch(0.955 0.016 84);
+  --card: oklch(0.238 0.02 52);
+  --card-foreground: oklch(0.955 0.016 84);
+  --popover: oklch(0.238 0.02 52);
+  --popover-foreground: oklch(0.955 0.016 84);
+  --primary: oklch(0.66 0.108 48);
+  --primary-foreground: oklch(0.16 0.014 54);
+  --secondary: oklch(0.29 0.022 54);
+  --secondary-foreground: oklch(0.955 0.016 84);
+  --muted: oklch(0.29 0.022 54);
+  --muted-foreground: oklch(0.715 0.018 74);
+  --accent: oklch(0.655 0.128 42);
+  --accent-foreground: oklch(0.16 0.014 54);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 16%);
+  --ring: oklch(0.655 0.128 42);
+  --sand: oklch(0.31 0.026 66);
+  --parchment: oklch(0.238 0.02 52);
+  --stone: oklch(0.9 0.016 78);
+  --olive: oklch(0.6 0.07 165);
+  --verified: oklch(0.62 0.075 165);
+}
+
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+
+  [dir="rtl"] body,
+  .font-arabic {
+    font-family: var(--font-arabic);
+  }
+}
+
+@utility font-display {
+  font-family: var(--font-display);
+}
+
+@utility font-arabic {
+  font-family: var(--font-arabic);
+}
+
+/* Subtle Egyptian geometric pattern (mashrabiya-inspired) */
+@utility pattern-geo {
+  background-image:
+    linear-gradient(45deg, oklch(0.585 0.132 40 / 0.055) 25%, transparent 25%),
+    linear-gradient(-45deg, oklch(0.585 0.132 40 / 0.055) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, oklch(0.585 0.132 40 / 0.055) 75%),
+    linear-gradient(-45deg, transparent 75%, oklch(0.585 0.132 40 / 0.055) 75%);
+  background-size: 22px 22px;
+  background-position:
+    0 0,
+    0 11px,
+    11px -11px,
+    -11px 0;
+}
+
+@utility surface-card {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-soft);
+}
+
+@utility text-balance-tight {
+  text-wrap: balance;
+}
+
+/* Leaflet map surface — keep tiles inside the heritage palette */
+.leaflet-container {
+  background-color: var(--color-sand);
+  font-family: var(--font-sans);
+}
+
+.leaflet-control-attribution {
+  background-color: color-mix(in oklab, var(--color-card) 82%, transparent) !important;
+  color: var(--color-muted-foreground) !important;
+  font-size: 10px;
+}
+
+.leaflet-control-attribution a {
+  color: var(--color-accent) !important;
+}
+
+.kz-pin {
+  display: block;
+  width: 14px;
+  height: 14px;
+  margin: 2px;
+  border-radius: 9999px;
+  background-color: var(--color-primary);
+  border: 2px solid var(--color-parchment);
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.15s ease;
+}
+
+.kz-pin:hover {
+  transform: scale(1.25);
+}
+
+.kz-pin-active {
+  background-color: var(--color-accent);
+  transform: scale(1.45);
+  box-shadow: 0 0 0 6px color-mix(in oklab, var(--color-accent) 28%, transparent);
+}
