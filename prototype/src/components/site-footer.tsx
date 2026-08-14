@@ -6,8 +6,8 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 md:grid-cols-4">
         <div className="md:col-span-2">
           <div className="flex items-center gap-2.5">
-            <span className="flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <span className="font-display text-lg leading-none">K</span>
+            <span className="arch-mask flex size-9 items-center justify-center bg-primary text-primary-foreground">
+              <span className="font-display text-lg leading-none text-accent">K</span>
             </span>
             <span className="font-display text-xl">Kenzory</span>
           </div>

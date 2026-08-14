@@ -33,28 +33,38 @@ function Home() {
   return (
     <PageShell>
       {/* Hero */}
-      <section className="relative overflow-hidden border-b border-border">
-        <div className="pointer-events-none absolute inset-0 pattern-geo opacity-60" />
+      <section className="relative overflow-hidden border-b border-border bg-primary">
+        <div className="pointer-events-none absolute inset-0 pattern-geo opacity-40" />
+        <div className="pointer-events-none absolute -right-24 -top-24 size-[420px] rounded-full bg-accent/25 blur-3xl" />
         <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 py-16 lg:grid-cols-[1.05fr_1fr] lg:py-24">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3.5 py-1.5 text-xs font-medium text-muted-foreground">
+            <span className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/15 bg-primary-foreground/10 px-3.5 py-1.5 text-xs font-medium text-primary-foreground/80">
               <Compass className="size-3.5 text-accent" />
               A community digital heritage initiative
             </span>
-            <h1 className="mt-6 text-balance-tight font-display text-5xl leading-[1.05] md:text-7xl">
-              Discover the Egypt You Never Knew.
+            <h1 className="mt-6 text-balance-tight font-display text-5xl leading-[1.02] text-primary-foreground md:text-7xl">
+              The Egypt your <span className="italic text-accent">map forgot.</span>
             </h1>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
-              Explore forgotten places, hidden landmarks, local stories, and cultural heritage
-              documented by the people who know them.
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-primary-foreground/75">
+              Forgotten places, hidden landmarks, and local stories — found and documented by the
+              people who actually know them.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button asChild size="lg" className="rounded-full px-6">
+              <Button
+                asChild
+                size="lg"
+                className="rounded-full bg-accent px-6 text-accent-foreground hover:bg-accent/90"
+              >
                 <Link to="/explore">
                   Explore Hidden Places <ArrowRight className="size-4" />
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="rounded-full px-6">
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="rounded-full border-primary-foreground/25 bg-transparent px-6 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
+              >
                 <Link to="/add-place">Share a Discovery</Link>
               </Button>
             </div>
@@ -67,27 +77,30 @@ function Home() {
           </div>
 
           <div className="relative">
-            <EgyptMap
-              places={places}
-              selectedId={selected}
-              onSelect={setSelected}
-              className="aspect-[4/5] w-full lg:aspect-square"
-            />
+            <div className="pointer-events-none absolute -inset-4 rounded-[999px_999px_1.5rem_1.5rem] bg-accent/20 blur-2xl" />
+            <div className="arch-mask relative overflow-hidden border-4 border-primary-foreground/10 shadow-[var(--shadow-glow)]">
+              <EgyptMap
+                places={places}
+                selectedId={selected}
+                onSelect={setSelected}
+                className="aspect-[4/5] w-full lg:aspect-square"
+              />
+            </div>
           </div>
         </div>
       </section>
 
       {/* Search prompts */}
-      <section className="border-b border-border bg-secondary/40">
+      <section className="border-b border-border bg-secondary/50">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-3 px-5 py-6">
           <span className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-            <Search className="size-4" /> Try searching
+            <Search className="size-4 text-accent" /> Try searching
           </span>
           {suggestedSearches.map((s) => (
             <Link
               key={s}
               to="/explore"
-              className="rounded-full border border-border bg-card px-3.5 py-1.5 text-sm text-muted-foreground transition-colors hover:border-accent/40 hover:text-foreground"
+              className="rounded-full border border-border bg-card px-3.5 py-1.5 text-sm text-muted-foreground shadow-[var(--shadow-soft)] transition-colors hover:border-accent/50 hover:text-foreground"
             >
               {s}
             </Link>
@@ -123,14 +136,14 @@ function Home() {
       </section>
 
       {/* Verification */}
-      <section className="border-y border-border bg-secondary/40">
+      <section className="border-y border-border bg-secondary/50">
         <div className="mx-auto grid max-w-7xl gap-10 px-5 py-20 lg:grid-cols-3">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
               Accuracy first
             </p>
             <h2 className="mt-3 font-display text-4xl">
-              Every claim carries its evidence with it.
+              Every claim carries its <span className="italic">evidence</span> with it.
             </h2>
             <p className="mt-4 leading-relaxed text-muted-foreground">
               Kenzory never presents unverified claims as established history. Each place shows its
@@ -236,16 +249,21 @@ function Home() {
       {/* CTA */}
       <section className="mx-auto max-w-7xl px-5 py-20">
         <div className="relative overflow-hidden rounded-3xl bg-primary px-8 py-16 text-center text-primary-foreground md:px-16">
-          <div className="pointer-events-none absolute inset-0 pattern-geo opacity-30" />
+          <div className="pointer-events-none absolute inset-0 pattern-geo opacity-25" />
+          <div className="pointer-events-none absolute left-1/2 top-0 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-accent/60 to-transparent" />
           <div className="relative">
-            <h2 className="mx-auto max-w-2xl font-display text-4xl leading-tight md:text-5xl">
-              Help preserve a piece of Egypt's history.
+            <h2 className="mx-auto max-w-2xl text-balance-tight font-display text-4xl leading-tight md:text-5xl">
+              Help preserve a piece of <span className="italic text-accent">Egypt's history.</span>
             </h2>
-            <p className="mx-auto mt-4 max-w-xl text-primary-foreground/80">
+            <p className="mx-auto mt-4 max-w-xl text-primary-foreground/75">
               If you know a place that deserves to be remembered, document it. One record can keep a
               building, a craft, or a story from disappearing.
             </p>
-            <Button asChild size="lg" variant="secondary" className="mt-8 rounded-full px-7">
+            <Button
+              asChild
+              size="lg"
+              className="mt-8 rounded-full bg-accent px-7 text-accent-foreground hover:bg-accent/90"
+            >
               <Link to="/add-place">
                 Share a Discovery <ArrowRight className="size-4" />
               </Link>
@@ -260,8 +278,8 @@ function Home() {
 function Stat({ value, label }: { value: string; label: string }) {
   return (
     <div>
-      <p className="font-display text-3xl">{value}</p>
-      <p className="text-xs uppercase tracking-widest text-muted-foreground">{label}</p>
+      <p className="font-display text-3xl text-primary-foreground">{value}</p>
+      <p className="text-xs uppercase tracking-widest text-primary-foreground/60">{label}</p>
     </div>
   );
 }
@@ -276,8 +294,8 @@ function Pillar({
   text: string;
 }) {
   return (
-    <div className="surface-card rounded-2xl p-6">
-      <span className="flex size-10 items-center justify-center rounded-lg bg-accent/10 text-accent">
+    <div className="surface-card group rounded-2xl p-6 transition-colors hover:border-accent/40">
+      <span className="flex size-10 items-center justify-center rounded-full border border-accent/25 text-accent transition-colors group-hover:bg-accent group-hover:text-accent-foreground">
         {icon}
       </span>
       <h3 className="mt-4 font-display text-xl">{title}</h3>

@@ -5,8 +5,12 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Kenzory design system — Egyptian heritage.
- * Palette: parchment / sand, deep charcoal, muted terracotta, olive, gold.
+ * Kenzory design system.
+ * Palette sampled directly from the site's own photography: the burnt-clay
+ * mudbrick of the mosque at dusk, the gold sunflare through the temple
+ * colonnade, sand underfoot, and a single cool Nile-water note held in
+ * reserve. Nothing here is a generic "heritage" beige — every value below
+ * traces back to a specific photograph in src/assets.
  * All colors are oklch semantic tokens. Never hardcode colors in components.
  */
 
@@ -51,78 +55,85 @@
   --color-community: var(--community);
   --color-review: var(--review);
   --color-unverified: var(--unverified);
-  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Cormorant Garamond", ui-serif, Georgia, serif;
-  --font-arabic: "Noto Kufi Arabic", "Plus Jakarta Sans", sans-serif;
-  --shadow-soft: 0 1px 2px oklch(0.245 0.03 52 / 0.05), 0 8px 24px -12px oklch(0.245 0.03 52 / 0.18);
-  --shadow-lift: 0 2px 4px oklch(0.245 0.03 52 / 0.06), 0 24px 48px -20px oklch(0.245 0.03 52 / 0.32);
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-arabic: "Noto Kufi Arabic", "Inter", sans-serif;
+  --shadow-soft: 0 1px 2px oklch(0.22 0.03 42 / 0.08), 0 8px 24px -12px oklch(0.22 0.03 42 / 0.22);
+  --shadow-lift: 0 4px 8px oklch(0.22 0.03 42 / 0.10), 0 28px 56px -22px oklch(0.22 0.03 42 / 0.4);
+  --shadow-glow: 0 0 0 1px oklch(0.745 0.14 62 / 0.25), 0 16px 40px -12px oklch(0.62 0.15 48 / 0.35);
 }
 
 :root {
-  --radius: 0.75rem;
-  /* Sampled from the places themselves: sun-bleached limestone, mud-brick
-     adobe, Nile water, palm shade, desert dusk. */
-  --background: oklch(0.968 0.016 78);
-  --foreground: oklch(0.245 0.022 52);
-  --card: oklch(0.988 0.01 84);
-  --card-foreground: oklch(0.245 0.022 52);
-  --popover: oklch(0.988 0.01 84);
-  --popover-foreground: oklch(0.245 0.022 52);
-  /* mud-brick / adobe — the dominant material in the photography */
-  --primary: oklch(0.48 0.098 48);
-  --primary-foreground: oklch(0.98 0.012 86);
-  --secondary: oklch(0.925 0.026 74);
-  --secondary-foreground: oklch(0.32 0.03 52);
-  --muted: oklch(0.935 0.02 78);
-  --muted-foreground: oklch(0.505 0.026 58);
-  /* sunset terracotta on the mosque walls */
-  --accent: oklch(0.585 0.132 40);
-  --accent-foreground: oklch(0.98 0.012 86);
-  --destructive: oklch(0.52 0.18 27);
+  --radius: 0.875rem;
+  /* Sun-bleached sand — background is warmer and lighter than a neutral
+     gray-beige, closer to the desert floor in the temple photograph. */
+  --background: oklch(0.965 0.021 72);
+  --foreground: oklch(0.225 0.026 40);
+  /* Card surface: "bone" — a shade warmer/lighter than the page so cards
+     visibly sit above it rather than blending in. */
+  --card: oklch(0.99 0.008 80);
+  --card-foreground: oklch(0.225 0.026 40);
+  --popover: oklch(0.99 0.008 80);
+  --popover-foreground: oklch(0.225 0.026 40);
+  /* Dusk clay — the shadowed mudbrick wall of the mosque at golden hour.
+     This is the primary brand color, not a generic terracotta. */
+  --primary: oklch(0.415 0.086 33);
+  --primary-foreground: oklch(0.98 0.014 78);
+  --secondary: oklch(0.915 0.032 62);
+  --secondary-foreground: oklch(0.32 0.05 36);
+  --muted: oklch(0.928 0.024 66);
+  --muted-foreground: oklch(0.485 0.036 46);
+  /* Gold hour — the sunflare bursting through the temple colonnade.
+     Reserved as the single loud accent; used sparingly by design. */
+  --accent: oklch(0.685 0.15 55);
+  --accent-foreground: oklch(0.2 0.03 40);
+  --destructive: oklch(0.5 0.19 24);
   --destructive-foreground: oklch(0.98 0.01 88);
-  --border: oklch(0.878 0.024 74);
-  --input: oklch(0.878 0.024 74);
-  --ring: oklch(0.585 0.132 40);
+  --border: oklch(0.865 0.03 62);
+  --input: oklch(0.865 0.03 62);
+  --ring: oklch(0.685 0.15 55);
 
-  --sand: oklch(0.925 0.036 76);
-  --parchment: oklch(0.958 0.022 82);
-  --stone: oklch(0.29 0.024 54);
-  --terracotta: oklch(0.585 0.132 40);
-  --terracotta-foreground: oklch(0.98 0.012 86);
-  /* Nile / palm — cooler green with a hint of water */
-  --olive: oklch(0.42 0.058 165);
+  --sand: oklch(0.9 0.042 66);
+  --parchment: oklch(0.955 0.026 76);
+  --stone: oklch(0.24 0.028 40);
+  --terracotta: oklch(0.53 0.13 38);
+  --terracotta-foreground: oklch(0.98 0.014 78);
+  /* Nile at dusk — a deep, desaturated teal held in reserve as the only
+     cool note in the palette, used for the "community verified" state
+     and small structural counterpoints. */
+  --olive: oklch(0.4 0.052 195);
   --olive-foreground: oklch(0.975 0.015 88);
-  --gold: oklch(0.745 0.118 78);
-  --gold-foreground: oklch(0.245 0.022 52);
-  --verified: oklch(0.46 0.078 165);
-  --community: oklch(0.5 0.075 235);
-  --review: oklch(0.66 0.125 68);
-  --unverified: oklch(0.58 0.014 66);
+  --gold: oklch(0.685 0.15 55);
+  --gold-foreground: oklch(0.2 0.03 40);
+  --verified: oklch(0.46 0.09 152);
+  --community: oklch(0.46 0.06 210);
+  --review: oklch(0.685 0.15 55);
+  --unverified: oklch(0.55 0.02 50);
 }
 
 .dark {
-  --background: oklch(0.185 0.016 54);
-  --foreground: oklch(0.955 0.016 84);
-  --card: oklch(0.238 0.02 52);
-  --card-foreground: oklch(0.955 0.016 84);
-  --popover: oklch(0.238 0.02 52);
-  --popover-foreground: oklch(0.955 0.016 84);
-  --primary: oklch(0.66 0.108 48);
-  --primary-foreground: oklch(0.16 0.014 54);
-  --secondary: oklch(0.29 0.022 54);
-  --secondary-foreground: oklch(0.955 0.016 84);
-  --muted: oklch(0.29 0.022 54);
-  --muted-foreground: oklch(0.715 0.018 74);
-  --accent: oklch(0.655 0.128 42);
-  --accent-foreground: oklch(0.16 0.014 54);
-  --border: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 16%);
-  --ring: oklch(0.655 0.128 42);
-  --sand: oklch(0.31 0.026 66);
-  --parchment: oklch(0.238 0.02 52);
-  --stone: oklch(0.9 0.016 78);
-  --olive: oklch(0.6 0.07 165);
-  --verified: oklch(0.62 0.075 165);
+  --background: oklch(0.19 0.024 38);
+  --foreground: oklch(0.95 0.018 74);
+  --card: oklch(0.24 0.028 38);
+  --card-foreground: oklch(0.95 0.018 74);
+  --popover: oklch(0.24 0.028 38);
+  --popover-foreground: oklch(0.95 0.018 74);
+  --primary: oklch(0.72 0.1 48);
+  --primary-foreground: oklch(0.17 0.02 38);
+  --secondary: oklch(0.3 0.028 42);
+  --secondary-foreground: oklch(0.95 0.018 74);
+  --muted: oklch(0.3 0.028 42);
+  --muted-foreground: oklch(0.7 0.026 66);
+  --accent: oklch(0.72 0.14 56);
+  --accent-foreground: oklch(0.17 0.02 38);
+  --border: oklch(1 0 0 / 13%);
+  --input: oklch(1 0 0 / 17%);
+  --ring: oklch(0.72 0.14 56);
+  --sand: oklch(0.32 0.032 58);
+  --parchment: oklch(0.24 0.028 38);
+  --stone: oklch(0.9 0.02 74);
+  --olive: oklch(0.58 0.06 195);
+  --verified: oklch(0.63 0.09 152);
 }
 
 
@@ -142,36 +153,47 @@
   h2,
   h3 {
     font-family: var(--font-display);
-    letter-spacing: -0.01em;
+    letter-spacing: -0.015em;
+    font-optical-sizing: auto;
   }
 
   [dir="rtl"] body,
   .font-arabic {
     font-family: var(--font-arabic);
   }
+
+  ::selection {
+    background-color: oklch(0.685 0.15 55 / 0.28);
+    color: var(--color-foreground);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
 }
 
 @utility font-display {
   font-family: var(--font-display);
+  font-variation-settings: "SOFT" 0, "WONK" 0;
 }
 
 @utility font-arabic {
   font-family: var(--font-arabic);
 }
 
-/* Subtle Egyptian geometric pattern (mashrabiya-inspired) */
+/* Arch rhythm — repeating horseshoe-arch silhouette, drawn from the mosque
+   doorway and temple colonnade in the site's own photography. Used at low
+   opacity as ambient texture behind the hero and CTA, never as filler. */
 @utility pattern-geo {
-  background-image:
-    linear-gradient(45deg, oklch(0.585 0.132 40 / 0.055) 25%, transparent 25%),
-    linear-gradient(-45deg, oklch(0.585 0.132 40 / 0.055) 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, oklch(0.585 0.132 40 / 0.055) 75%),
-    linear-gradient(-45deg, transparent 75%, oklch(0.585 0.132 40 / 0.055) 75%);
-  background-size: 22px 22px;
-  background-position:
-    0 0,
-    0 11px,
-    11px -11px,
-    -11px 0;
+  background-image: radial-gradient(
+    circle at 50% 100%,
+    oklch(0.685 0.15 55 / 0.14) 0%,
+    oklch(0.685 0.15 55 / 0.14) 38%,
+    transparent 39%
+  );
+  background-size: 64px 64px;
+  background-position: 0 0;
 }
 
 @utility surface-card {
@@ -182,6 +204,18 @@
 
 @utility text-balance-tight {
   text-wrap: balance;
+}
+
+/* Signature arch shape — the recurring structural motif of the redesign.
+   A single pointed horseshoe arch (mosque doorway / temple gate), used as
+   a real container (hero visual, image masks) rather than decoration. */
+@utility arch-mask {
+  border-radius: 999px 999px 0.875rem 0.875rem / 1.4fr 1.4fr 0.875rem 0.875rem;
+}
+
+@utility arch-top {
+  border-top-left-radius: 40%;
+  border-top-right-radius: 40%;
 }
 
 /* Leaflet map surface — keep tiles inside the heritage palette */

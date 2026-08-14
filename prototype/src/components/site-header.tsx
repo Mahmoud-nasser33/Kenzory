@@ -20,8 +20,8 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-6 px-5">
         <Link to="/" className="flex items-center gap-2.5">
-          <span className="flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <span className="font-display text-lg leading-none">K</span>
+          <span className="arch-mask flex size-9 items-center justify-center bg-primary text-primary-foreground">
+            <span className="font-display text-lg leading-none text-accent">K</span>
           </span>
           <span className="flex flex-col leading-none">
             <span className="font-display text-xl tracking-tight">Kenzory</span>

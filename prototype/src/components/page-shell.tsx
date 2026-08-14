@@ -24,8 +24,9 @@ export function PageHeader({
   children?: ReactNode;
 }) {
   return (
-    <section className="border-b border-border bg-secondary/40">
-      <div className="mx-auto max-w-7xl px-5 py-14">
+    <section className="relative overflow-hidden border-b border-border bg-secondary/50">
+      <div className="pointer-events-none absolute inset-0 pattern-geo opacity-20" />
+      <div className="relative mx-auto max-w-7xl px-5 py-14">
         {eyebrow && (
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">{eyebrow}</p>
         )}

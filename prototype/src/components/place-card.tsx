@@ -10,7 +10,7 @@ export function PlaceCard({ place, className }: { place: Place; className?: stri
       to="/place/$placeId"
       params={{ placeId: place.id }}
       className={cn(
-        "group surface-card block overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]",
+        "group surface-card block overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:border-accent/30 hover:shadow-[var(--shadow-lift)]",
         className,
       )}
     >
@@ -23,7 +23,7 @@ export function PlaceCard({ place, className }: { place: Place; className?: stri
           height={800}
           className="size-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-stone/70 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-stone/80 via-stone/20 to-transparent" />
         <div className="absolute left-3 top-3">
           <VerificationBadge
             status={place.verification}
@@ -39,12 +39,14 @@ export function PlaceCard({ place, className }: { place: Place; className?: stri
       </div>
 
       <div className="space-y-2.5 p-5">
-        <h3 className="font-display text-xl leading-snug text-foreground">{place.name}</h3>
+        <h3 className="font-display text-xl leading-snug text-foreground transition-colors group-hover:text-primary">
+          {place.name}
+        </h3>
         <p className="font-arabic text-sm text-muted-foreground" dir="rtl">
           {place.nameAr}
         </p>
         <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-          <MapPin className="size-3.5" />
+          <MapPin className="size-3.5 text-accent" />
           {place.city}, {place.governorate}
         </div>
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1 pt-1 text-xs">
