@@ -1,4 +1,5 @@
 # Kenzory
+<img width="150" height="150" alt="kenzory-logo" src="https://github.com/user-attachments/assets/a3fb1b19-8b69-4897-ab80-ef4e25e9a07f" />
 
 A community heritage map of Egypt. Anyone can register, add a heritage place with a
 description and photos, and see it live on the map once an admin approves it.
