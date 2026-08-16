@@ -6,7 +6,6 @@ Secrets and deployment-specific values are read from environment variables.
 """
 
 import os
-import tempfile
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 INSTANCE_DIR = os.path.join(BASE_DIR, "instance")
@@ -16,30 +15,12 @@ def _sqlite_default(name):
     return "sqlite:///" + os.path.join(INSTANCE_DIR, name).replace("\\", "/")
 
 
-def _sqlite_temp_default():
-    """A writable per-instance SQLite file (used as a safe production fallback)."""
-    path = os.path.join(tempfile.gettempdir(), "kenzory-fallback.db")
-    return "sqlite:///" + path.replace("\\", "/")
-
-
-def _normalize_db_url(url):
-    """Make a provider-style DATABASE_URL usable by SQLAlchemy 2.
-
-    Vercel Postgres / Neon / Supabase hand out ``postgres://...`` URLs, which
-    SQLAlchemy does not recognise as a dialect. ``postgresql://`` is accepted
-    and uses the installed psycopg2 driver by default.
-    """
-    if url and url.startswith("postgres://"):
-        return "postgresql://" + url[len("postgres://"):]
-    return url
-
-
 class Config:
     """Base configuration shared by all environments."""
 
     SECRET_KEY = os.getenv("SECRET_KEY", "change-me-in-production")
 
-    SQLALCHEMY_DATABASE_URI = _normalize_db_url(os.getenv("DATABASE_URL"))
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     SESSION_COOKIE_HTTPONLY = True
@@ -78,12 +59,7 @@ class TestingConfig(Config):
 class ProductionConfig(Config):
     DEBUG = False
     TESTING = False
-    # Fall back to a writable temp SQLite file when DATABASE_URL is missing so a
-    # misconfigured deployment still boots and serves empty pages instead of
-    # crashing every serverless function.
-    _database_url = _normalize_db_url(os.getenv("DATABASE_URL"))
-    SQLALCHEMY_DATABASE_URI = _database_url or _sqlite_temp_default()
-    USE_FALLBACK_DB = _database_url is None
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
     SESSION_COOKIE_SECURE = os.getenv("SESSION_COOKIE_SECURE", "false").lower() == "true"
     REMEMBER_COOKIE_SECURE = os.getenv("SESSION_COOKIE_SECURE", "false").lower() == "true"
 

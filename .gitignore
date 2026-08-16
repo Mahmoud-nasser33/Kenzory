@@ -29,6 +29,3 @@ htmlcov/
 Thumbs.db
 .vscode/
 .idea/
-
-# Vercel CLI local state
-.vercel/
