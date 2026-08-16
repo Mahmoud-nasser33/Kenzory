@@ -34,6 +34,14 @@ def create_app(config_name=None, db_uri=None):
     _register_template_helpers(app)
     _register_commands(app)
 
+    if app.config.get("USE_FALLBACK_DB"):
+        # No real database configured (e.g. DATABASE_URL missing on a serverless
+        # host). Create the schema in the fallback SQLite file so the app serves
+        # empty pages instead of crashing on every request. Runs after the model
+        # imports above so the metadata is fully populated.
+        with app.app_context():
+            db.create_all()
+
     @app.before_request
     def csrf_protect():
         return protect_csrf()
