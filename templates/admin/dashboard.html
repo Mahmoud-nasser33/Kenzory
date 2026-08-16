@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Admin — Kenzory{% endblock %}
+
+{% block content %}
+<div class="page-head admin-head">
+  <div class="container">
+    <div class="eyebrow">Admin</div>
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-sub">Moderate submissions and keep the map healthy.</p>
+  </div>
+</div>
+
+<div class="container section" style="padding-bottom:80px">
+  <div class="admin-nav">
+    <a href="/admin" class="active">Dashboard</a>
+    <a href="/admin/submissions">Submissions <span class="count-badge">{{ stats.pending }}</span></a>
+    <a href="/admin/places">Places</a>
+    <a href="/admin/users">Users</a>
+  </div>
+
+  <div class="admin-stats">
+    <div class="surface-card stat-card"><b>{{ stats.places }}</b><span>Total places</span></div>
+    <div class="surface-card stat-card"><b>{{ stats.approved_places }}</b><span>Live records</span></div>
+    <div class="surface-card stat-card stat-warn"><b>{{ stats.pending }}</b><span>Pending review</span></div>
+    <div class="surface-card stat-card"><b>{{ stats.approved_submissions }}</b><span>Approved</span></div>
+    <div class="surface-card stat-card"><b>{{ stats.rejected }}</b><span>Rejected</span></div>
+    <div class="surface-card stat-card"><b>{{ stats.users }}</b><span>Users</span></div>
+    <div class="surface-card stat-card"><b>{{ stats.categories }}</b><span>Categories</span></div>
+  </div>
+
+  <div class="admin-columns">
+    <div class="surface-card admin-panel">
+      <div class="admin-panel-head">
+        <h3>Submissions queue</h3>
+        <a href="/admin/submissions">View all</a>
+      </div>
+      {% if recent_submissions %}
+      <div class="admin-list">
+        {% for s in recent_submissions %}
+        <a class="admin-row" href="/admin/submissions/{{ s.id }}">
+          <span class="admin-row-title">
+            {% if s.images %}
+            <img src="{{ url_for('static', filename=s.images[0]) }}" alt="">
+            {% endif %}
+            <span>
+              <b>{{ s.title }}</b>
+              <small>{{ s.submitter.display if s.submitter else '—' }} · {{ s.governorate }} · {{ s.created_at|timeago }}</small>
+            </span>
+          </span>
+          <span class="badge status-badge {{ s.status|status_tone }}">{{ s.status|status_label }}</span>
+        </a>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="admin-empty">The queue is clear — nothing pending.</p>
+      {% endif %}
+    </div>
+
+    <div class="surface-card admin-panel">
+      <div class="admin-panel-head">
+        <h3>Recently added places</h3>
+        <a href="/admin/places">View all</a>
+      </div>
+      {% if recent_places %}
+      <div class="admin-list">
+        {% for p in recent_places %}
+        <a class="admin-row" href="/place/{{ p.slug }}">
+          <span class="admin-row-title">
+            <span>
+              <b>{{ p.title }}</b>
+              <small>{{ p.category.name if p.category else '—' }} · {{ p.governorate }} · {{ p.created_at|timeago }}</small>
+            </span>
+          </span>
+          <span class="admin-row-chevron"><i data-lucide="chevron-right" class="icon-sm"></i></span>
+        </a>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="admin-empty">No places yet.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

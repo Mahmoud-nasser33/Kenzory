@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Flask / database
+instance/
+*.db
+*.sqlite3
+.env
+
+# Uploads (user content)
+static/uploads/*
+!static/uploads/.gitkeep
+
+# Generated cover images (recreated on demand)
+static/img/covers/
+
+# Test artifacts
+.pytest_cache/
+coverage.xml
+htmlcov/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

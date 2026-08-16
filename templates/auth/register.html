@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Create an account — Kenzory{% endblock %}
+
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-card surface-card">
+    <div class="auth-brand">
+      <span class="brand-mark"><img src="{{ url_for('static', filename='img/kenzory-logo.svg') }}" alt="Kenzory logo" width="34" height="34"></span>
+      <h1>Join Kenzory</h1>
+      <p>Create an account to document places and share what you know.</p>
+    </div>
+
+    <form method="post" action="/register" class="stack-form" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="field">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" value="{{ form.get('username', '') }}" required autofocus autocomplete="username">
+        {% if errors.get('username') %}<span class="field-error">{{ errors['username'] }}</span>{% endif %}
+      </div>
+      <div class="field">
+        <label for="display_name">Display name <em class="opt">optional</em></label>
+        <input type="text" id="display_name" name="display_name" value="{{ form.get('display_name', '') }}" autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" value="{{ form.get('email', '') }}" required autocomplete="email">
+        {% if errors.get('email') %}<span class="field-error">{{ errors['email'] }}</span>{% endif %}
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required minlength="8" autocomplete="new-password">
+        <span class="field-hint">At least 8 characters.</span>
+        {% if errors.get('password') %}<span class="field-error">{{ errors['password'] }}</span>{% endif %}
+      </div>
+      <div class="field">
+        <label for="password_confirm">Confirm password</label>
+        <input type="password" id="password_confirm" name="password_confirm" required autocomplete="new-password">
+        {% if errors.get('password_confirm') %}<span class="field-error">{{ errors['password_confirm'] }}</span>{% endif %}
+      </div>
+      <button type="submit" class="btn btn-accent btn-block">Create account</button>
+    </form>
+
+    <p class="auth-alt">Already have an account? <a href="/login">Sign in</a></p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Not allowed — Kenzory{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="notfound">
+    <div class="big">403</div>
+    <h1>You need a key to get in here.</h1>
+    <p style="color:var(--muted);max-width:420px;margin:0 auto 26px">
+      {% if current_user.is_authenticated %}
+      This area is reserved for the Kenzory review team. Your account is signed in but doesn't have permission to view this page.
+      {% else %}
+      Please sign in to continue — and if this is an admin page, only the review team can access it.
+      {% endif %}
+    </p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <a class="btn btn-accent" href="/">Back home</a>
+      {% if not current_user.is_authenticated %}
+      <a class="btn btn-outline" href="/login">Sign in</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

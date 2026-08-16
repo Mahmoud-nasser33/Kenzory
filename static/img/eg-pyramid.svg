@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="Pyramid — symbol of ancient Egypt">
+  <defs>
+    <linearGradient id="py-gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e3c066"/>
+      <stop offset="1" stop-color="#c8a24a"/>
+    </linearGradient>
+  </defs>
+
+  <!-- medallion -->
+  <circle cx="100" cy="100" r="88" fill="#121a13"/>
+  <circle cx="100" cy="100" r="83" fill="none" stroke="#c8a24a" stroke-opacity="0.35" stroke-width="1.5"/>
+  <circle cx="100" cy="100" r="88" fill="none" stroke="#c8a24a" stroke-width="2.5"/>
+
+  <!-- sun -->
+  <circle cx="138" cy="68" r="13" fill="url(#py-gold)"/>
+  <g stroke="#c8a24a" stroke-width="2" stroke-linecap="round">
+    <line x1="138" y1="46" x2="138" y2="38"/>
+    <line x1="160" y1="60" x2="167" y2="55"/>
+    <line x1="160" y1="76" x2="167" y2="81"/>
+    <line x1="150" y1="45" x2="156" y2="39"/>
+  </g>
+
+  <!-- pyramid -->
+  <path d="M100 46 L150 170 L50 170 Z" fill="url(#py-gold)"/>
+
+  <!-- stone courses -->
+  <g stroke="#c39a3a" stroke-width="2" opacity="0.9">
+    <line x1="84" y1="96" x2="116" y2="96"/>
+    <line x1="72" y1="122" x2="128" y2="122"/>
+    <line x1="61" y1="148" x2="139" y2="148"/>
+  </g>
+
+  <!-- entrance -->
+  <rect x="92" y="146" width="16" height="24" rx="2" fill="#121a13"/>
+
+  <!-- sand line -->
+  <path d="M40 172 Q100 176 160 172" stroke="url(#py-gold)" stroke-width="3" fill="none" stroke-linecap="round"/>
+</svg>

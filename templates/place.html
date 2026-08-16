@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% from "macros.html" import category_badge, verified_badge, save_btn, rating with context %}
+
+{% block title %}{{ place.title }} — Kenzory{% endblock %}
+
+{% block content %}
+
+<section class="place-hero">
+  <img src="{{ place_image(place) }}" alt="{{ place.title }}">
+  <div class="container place-hero-content">
+    <div class="row-badges" style="margin-bottom:14px">
+      {{ category_badge(place.category.name) }}
+      {{ verified_badge(place) }}
+    </div>
+    <h1>{{ place.title }}</h1>
+    {% if place.title_ar %}<div class="ar">{{ place.title_ar }}</div>{% endif %}
+    <div class="place-hero-meta">
+      <span style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="map-pin" class="icon"></i>{{ place.location }}, {{ place.governorate }}</span>
+      {% if place.approx_date %}<span style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="calendar" class="icon"></i>{{ place.approx_date }}</span>{% endif %}
+      {% if place.period %}<span style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="hourglass" class="icon"></i>{{ place.period }}</span>{% endif %}
+      <span style="display:inline-flex;align-items:center;gap:6px">{{ rating(place) }}</span>
+    </div>
+    <div class="place-hero-actions">
+      {{ save_btn(place, light=True) }}
+      <button type="button" class="btn btn-outline btn-sm" id="share-btn" style="border-color:oklch(1 0 0 / .3);color:var(--primary-foreground)">
+        <i data-lucide="share-2" class="icon-sm"></i> Share
+      </button>
+    </div>
+  </div>
+</section>
+
+<div class="container place-body">
+
+  <article class="place-article">
+    {% if place.summary %}
+    <p style="font-family:var(--font-display);font-size:1.15rem;line-height:1.7;color:var(--ink)">{{ place.summary }}</p>
+    {% endif %}
+
+    {% if place.description %}
+    <h2>About this place</h2>
+    <p>{{ place.description }}</p>
+    {% endif %}
+
+    {% if place.historical_background and place.historical_background != place.description %}
+    <h2>Historical background</h2>
+    <p>{{ place.historical_background }}</p>
+    {% endif %}
+
+    {% if place.key_facts %}
+    <h2>Key facts</h2>
+    <div class="facts-grid">
+      {% for f in place.key_facts %}
+      <div class="fact-item"><i data-lucide="check" class="icon"></i><span>{{ f }}</span></div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if place.timeline %}
+    <h2>Timeline</h2>
+    <ul class="timeline">
+      {% for t in place.timeline %}<li>{{ t }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if place.architecture %}
+    <h2>Architecture</h2>
+    <div class="facts-grid">
+      {% for a in place.architecture %}
+      <div class="fact-item"><i data-lucide="landmark" class="icon"></i><span>{{ a }}</span></div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if gallery %}
+    <h2>Gallery</h2>
+    <div class="gallery" id="gallery">
+      {% for g in gallery %}
+      <img src="{{ g }}" alt="{{ place.title }} — photo {{ loop.index }}" loading="lazy" data-lightbox>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if place.local_stories %}
+    <h2>Local stories</h2>
+    {% for s in place.local_stories %}
+    <div style="border-left:3px solid var(--accent);background:color-mix(in oklab,var(--accent) 7%, white);padding:16px 20px;border-radius:0 12px 12px 0;margin-bottom:14px;font-style:italic;color:var(--ink-soft);line-height:1.7">{{ s }}</div>
+    {% endfor %}
+    {% endif %}
+
+    {% if place.sources %}
+    <h2>Sources</h2>
+    <p style="font-size:.9rem">{{ place.sources | join(" · ") }}</p>
+    {% endif %}
+  </article>
+
+  <aside>
+    <div class="surface-card sidebar-card">
+      <h3>Visit information</h3>
+      <div class="side-info-row"><span><i data-lucide="map-pin" class="icon"></i>Governorate</span><b>{{ place.governorate }}</b></div>
+      {% if place.region %}<div class="side-info-row"><span><i data-lucide="navigation" class="icon"></i>Region</span><b>{{ place.region }}</b></div>{% endif %}
+      <div class="side-info-row"><span><i data-lucide="clock" class="icon"></i>Recommended time</span><b>{{ place.visit_minutes }} min</b></div>
+      {% if place.distance_km %}<div class="side-info-row"><span><i data-lucide="route" class="icon"></i>From city centre</span><b>{{ "%.1f"|format(place.distance_km) }} km</b></div>{% endif %}
+      {% if place.approx_date %}<div class="side-info-row"><span><i data-lucide="calendar" class="icon"></i>Era</span><b>{{ place.approx_date }}</b></div>{% endif %}
+      <div class="side-info-row"><span><i data-lucide="camera" class="icon"></i>Photos</span><b>{{ place.photos }}</b></div>
+      <div class="side-info-row"><span><i data-lucide="bookmark" class="icon"></i>Saves</span><b>{{ place.saves|num }}</b></div>
+    </div>
+
+    {% if place.creator %}
+    <div class="surface-card sidebar-card">
+      <h3>Documented by</h3>
+      <div class="byline">
+        <span class="byline-avatar">{{ place.creator.initials }}</span>
+        <div>
+          <b style="font-size:.95rem">{{ place.creator.display }}</b>
+          <span style="display:block;font-size:.78rem;color:var(--muted)">Contributor{% if place.creator.is_admin %} · Staff{% endif %} · added {{ place.created_at|timeago }}</span>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if place.latitude and place.longitude %}
+    <div class="surface-card sidebar-card">
+      <h3>On the map</h3>
+      <div style="height:180px;border-radius:12px;overflow:hidden" id="place-mini-map"></div>
+      <p style="font-size:.78rem;color:var(--muted);margin-top:10px;display:flex;align-items:center;gap:6px">
+        <i data-lucide="compass" class="icon-sm"></i> {{ "%.4f"|format(place.latitude) }}, {{ "%.4f"|format(place.longitude) }}
+      </p>
+    </div>
+    {% endif %}
+  </aside>
+</div>
+
+<section class="container section" style="padding-top:20px">
+  <div class="section-head">
+    <div>
+      <div class="eyebrow">Keep exploring</div>
+      <h2 class="section-title">Related discoveries</h2>
+    </div>
+  </div>
+  <div class="card-grid">
+    {% for r in related %}{% include "partials/_place_card.html" %}{% endfor %}
+  </div>
+</section>
+
+{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', filename='vendor/leaflet/css/leaflet.css') }}">
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='vendor/leaflet/js/leaflet.js') }}"></script>
+<script>
+  {% if place.latitude and place.longitude %}
+  window.PLACE_MAP = { lat: {{ place.latitude }}, lng: {{ place.longitude }}, name: {{ place.title|tojson }} };
+  {% endif %}
+  window.PLACE_URL = {{ place.slug|tojson }};
+</script>
+<script src="{{ url_for('static', filename='js/place.js') }}"></script>
+<script src="{{ url_for('static', filename='js/saved.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% from "macros.html" import empty_state with context %}
+{% block title %}Discoveries — Kenzory{% endblock %}
+
+{% block content %}
+<section class="container section" style="padding-bottom:80px">
+  <div class="section-head">
+    <div>
+      <div class="eyebrow">Community feed</div>
+      <h1 style="font-family:var(--font-display);font-size:clamp(1.9rem,3.4vw,2.8rem);margin-top:8px">Latest discoveries</h1>
+      <p class="section-sub">New records, updates, and field notes from contributors across Egypt.</p>
+    </div>
+    <a class="btn btn-accent btn-sm" href="/add-place"><i data-lucide="plus" class="icon-sm"></i> Share yours</a>
+  </div>
+
+  {% if recent_places or recent_stories %}
+  <div class="feed-list">
+    {% for place in recent_places %}
+    <article class="surface-card feed-item">
+      <img src="{{ place_image(place) }}" alt="{{ place.title }}" loading="lazy">
+      <div>
+        <div class="row-badges" style="margin-bottom:8px">
+          <span class="badge category-badge cat-hidden">New record</span>
+          {% if place.verified %}<span class="badge verified-badge"><i data-lucide="shield-check" class="icon-sm"></i> Reviewed</span>{% endif %}
+        </div>
+        <h3><a href="/place/{{ place.slug }}">{{ place.title }}</a></h3>
+        <p>{{ place.summary }}</p>
+        <div class="feed-meta">
+          {% if place.creator %}
+          <span class="byline"><span class="byline-avatar" style="width:26px;height:26px;font-size:.65rem">{{ place.creator.initials }}</span>{{ place.creator.display }}</span>
+          {% else %}
+          <span class="byline"><span class="byline-avatar" style="width:26px;height:26px;font-size:.65rem">K</span>Kenzory editors</span>
+          {% endif %}
+          <span><i data-lucide="clock" class="icon-sm"></i> {{ place.created_at|timeago }}</span>
+          <span><i data-lucide="map-pin" class="icon-sm"></i> {{ place.governorate }}</span>
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+
+    {% for story in recent_stories %}
+    <article class="surface-card feed-item">
+      <img src="{{ story_image(story) }}" alt="{{ story.title }}" loading="lazy">
+      <div>
+        <div class="row-badges" style="margin-bottom:8px">
+          <span class="badge category-badge cat-stories">Story</span>
+        </div>
+        <h3><a href="/stories/{{ story.slug }}">{{ story.title }}</a></h3>
+        <p>{{ story.excerpt }}</p>
+        <div class="feed-meta">
+          <span class="byline"><span class="byline-avatar" style="width:26px;height:26px;font-size:.65rem">{{ story.author.split()[:2]|map("first")|join("")|upper }}</span>{{ story.author }}</span>
+          <span><i data-lucide="clock" class="icon-sm"></i> {{ story.created_at|timeago }}</span>
+          <span><i data-lucide="book-open" class="icon-sm"></i> {{ story.read_minutes }} min read</span>
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+    {{ empty_state("compass", "Nothing here yet", "Be the first to share a discovery in your city.") }}
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Interactive Map — Kenzory{% endblock %}
+
+{% block content %}
+<div class="map-page">
+  <div class="container map-toolbar">
+    <span class="eyebrow" style="white-space:nowrap">The map</span>
+    <div class="chip-row" id="map-category-chips"></div>
+  </div>
+  <div class="map-canvas">
+    <div id="map"></div>
+    <div class="map-legend" id="map-legend"></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', filename='vendor/leaflet/css/leaflet.css') }}">
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='vendor/leaflet/js/leaflet.js') }}"></script>
+<script>
+  window.PLACES_JSON = {{ places_json | safe }};
+</script>
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>
+{% endblock %}

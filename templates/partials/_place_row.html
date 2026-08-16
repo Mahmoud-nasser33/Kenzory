@@ -1,0 +1,24 @@
+{% from "macros.html" import category_badge, verified_badge, save_btn, rating with context %}
+<article class="place-card place-row surface-card">
+  <div class="place-card-media">
+    <a href="/place/{{ place.slug }}"><img src="{{ place_image(place) }}" alt="{{ place.title }}" loading="lazy" width="640" height="400"></a>
+  </div>
+  <div class="place-card-body">
+    <div class="place-row-head">
+      <h3 class="place-card-title"><a href="/place/{{ place.slug }}">{{ place.title }}</a></h3>
+      <span>{{ save_btn(place) }}</span>
+    </div>
+    {% if place.title_ar %}<p class="place-card-ar">{{ place.title_ar }}</p>{% endif %}
+    <div class="row-badges">
+      {{ category_badge(place.category.name) }}
+      {% if place.verified %}<span class="badge verified-badge"><i data-lucide="shield-check" class="icon-sm"></i> Verified</span>{% endif %}
+    </div>
+    <p class="place-card-summary">{{ place.summary }}</p>
+    <div class="place-card-meta">
+      {{ rating(place) }}
+      {% if place.saves %}<span><i data-lucide="bookmark" class="icon-sm"></i> {{ place.saves|num }} saves</span>{% endif %}
+      {% if place.photos %}<span><i data-lucide="camera" class="icon-sm"></i> {{ place.photos }} photos</span>{% endif %}
+      <span><i data-lucide="map-pin" class="icon-sm"></i> {{ place.location }}, {{ place.governorate }}</span>
+    </div>
+  </div>
+</article>

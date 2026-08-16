@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% from "macros.html" import category_badge, save_btn, rating, skeleton_card with context %}
+{% block title %}Kenzory — Discover the Egypt You Haven't Seen Yet{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="container hero-inner">
+    <div class="hero-copy">
+      <h1 class="hero-title">Discover the Egypt <span class="accent">you haven't seen yet</span>.</h1>
+      <div class="hero-search">
+        <form action="/explore" method="get" class="search-form">
+          <i data-lucide="search" class="search-icon"></i>
+          <input type="search" name="q" placeholder="Search monuments, neighborhoods, crafts…" aria-label="Search">
+          <button type="submit" class="btn btn-accent">Search</button>
+        </form>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><b>{{ stats.places|num }}</b><span>places documented</span></div>
+        <div class="stat"><b>{{ stats.governorates }}</b><span>governorates</span></div>
+        <div class="stat"><b>{{ stats.photos|num }}</b><span>photos shared</span></div>
+      </div>
+    </div>
+    <div class="hero-emblem">
+      <img src="{{ url_for('static', filename='img/eg-pyramid.svg') }}" alt="Pyramid — symbol of ancient Egypt" width="200" height="200">
+    </div>
+  </div>
+</section>
+
+<section class="category-strip">
+  <div class="container">
+    <div class="category-row">
+      {% for cat in categories %}
+      <a class="chip category-chip" href="/explore?category={{ cat.slug }}">
+        <span class="chip-icon" style="color: {{ category_meta.get(cat.name, {}).get('tone', '#666')|replace('cat-', '') }}">{{ cat.icon }}</span>
+        <span>{{ cat.name }}</span>
+        <span class="chip-count">{{ places_by_category.get(cat.id, 0) }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Editor's picks</p>
+        <h2 class="section-title">Featured discoveries</h2>
+      </div>
+      <a class="btn btn-outline" href="/explore">View all <i data-lucide="arrow-right" class="icon"></i></a>
+    </div>
+    <div class="card-grid">
+      {% for place in featured %}
+        {% include "partials/_place_card.html" %}
+      {% else %}
+        {% for _ in range(3) %}{{ skeleton_card() }}{% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section bg-tint">
+  <div class="container">
+    <div class="feature-split">
+      <div class="feature-split-main">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Popular right now</p>
+            <h2 class="section-title">Most saved this week</h2>
+          </div>
+          <a class="btn btn-outline" href="/explore?sort=saves">See what's trending <i data-lucide="arrow-right" class="icon"></i></a>
+        </div>
+        <div class="card-grid card-grid-3">
+          {% for place in popular %}
+            {% include "partials/_place_card.html" %}
+          {% endfor %}
+        </div>
+      </div>
+      <aside class="lead-story">
+        {% if lead_story %}
+        <p class="eyebrow">New on the journal</p>
+        <a class="lead-story-media" href="/stories/{{ lead_story.slug }}"><img src="{{ story_image(lead_story) }}" alt="{{ lead_story.title }}" loading="lazy"></a>
+        <div class="row-badges">{{ category_badge(lead_story.category) }}</div>
+        <h3 class="lead-story-title"><a href="/stories/{{ lead_story.slug }}">{{ lead_story.title }}</a></h3>
+        <p class="lead-story-excerpt">{{ lead_story.excerpt }}</p>
+        <div class="lead-story-meta">
+          <span class="byline">
+            <span class="byline-avatar">{{ lead_story.author.split()[:2]|map("first")|join("")|upper }}</span>
+            {{ lead_story.author }}
+          </span>
+          <span>· {{ lead_story.read_minutes }} min read</span>
+        </div>
+        {% else %}
+        <div class="empty-state">
+          <div class="empty-icon"><i data-lucide="book-open" class="icon-lg"></i></div>
+          <h3>No stories yet</h3>
+          <p>Field notes from contributors will appear here.</p>
+        </div>
+        {% endif %}
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Fresh finds</p>
+        <h2 class="section-title">Recently documented</h2>
+      </div>
+      <a class="btn btn-outline" href="/discoveries">All discoveries <i data-lucide="arrow-right" class="icon"></i></a>
+    </div>
+    <div class="card-grid">
+      {% for place in recent %}
+        {% include "partials/_place_card.html" %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section cta-section">
+  <div class="container">
+    <div class="cta-card">
+      <div class="cta-icon"><i data-lucide="map-pin" class="icon-lg"></i></div>
+      <h2 class="cta-title">Know a hidden gem?</h2>
+      <p class="cta-text">Kenzory is built by people who love where they live. If there's a place in your city that deserves to be remembered, document it.</p>
+      <div class="cta-actions">
+        <a class="btn btn-accent btn-lg" href="/add-place"><i data-lucide="plus" class="icon"></i> Share a Discovery</a>
+        <a class="btn btn-outline btn-lg" href="/map"><i data-lucide="map" class="icon"></i> Open the map</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>window.PLACES_JSON = {{ places_json|safe }};</script>
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='js/saved.js') }}"></script>
+<script src="{{ url_for('static', filename='js/place.js') }}"></script>
+{% endblock %}

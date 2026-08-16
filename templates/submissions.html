@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% from "macros.html" import empty_state with context %}
+{% block title %}My submissions — Kenzory{% endblock %}
+
+{% block content %}
+<section class="container section" style="padding-bottom:80px">
+  <div class="section-head">
+    <div>
+      <div class="eyebrow">Your contributions</div>
+      <h1 style="font-family:var(--font-display);font-size:clamp(1.9rem,3.4vw,2.8rem);margin-top:8px">My submissions</h1>
+      <p class="section-sub">Every record you've shared, and where it stands.</p>
+    </div>
+    <a class="btn btn-accent btn-sm" href="/add-place"><i data-lucide="plus" class="icon-sm"></i> New submission</a>
+  </div>
+
+  {% if submissions %}
+  <div class="feed-list">
+    {% for s in submissions %}
+    <article class="surface-card feed-item">
+      <div class="sub-thumb">
+        {% if s.images %}
+        <img src="{{ url_for('static', filename=s.images[0]) }}" alt="{{ s.title }}" loading="lazy">
+        {% else %}
+        <div class="sub-thumb-placeholder"><i data-lucide="map-pin" class="icon-lg"></i></div>
+        {% endif %}
+      </div>
+      <div>
+        <div class="row-badges" style="margin-bottom:8px">
+          <span class="badge status-badge {{ s.status|status_tone }}">{{ s.status|status_label }}</span>
+          {% if s.category %}<span class="badge category-badge cat-hidden">{{ s.category.name }}</span>{% endif %}
+        </div>
+        <h3>{{ s.title }}</h3>
+        <p>
+          {{ s.summary }}
+          {% if s.location %}<br><span style="color:var(--muted);font-size:.82rem"><i data-lucide="map-pin" class="icon-sm"></i> {{ s.location }}{% if s.governorate %}, {{ s.governorate }}{% endif %}</span>{% endif %}
+        </p>
+        {% if s.status == 'rejected' and s.review_note %}
+        <div class="review-note"><i data-lucide="message-square" class="icon-sm"></i> <span>Reviewer note: {{ s.review_note }}</span></div>
+        {% endif %}
+        <div class="feed-meta">
+          <span><i data-lucide="clock" class="icon-sm"></i> Submitted {{ s.created_at|timeago }}</span>
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+    {{ empty_state("layers", "No submissions yet", "Share your first discovery — it takes just a few minutes.", "Share a Discovery", "/add-place") }}
+  {% endif %}
+</section>
+{% endblock %}

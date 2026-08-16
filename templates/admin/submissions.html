@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Submissions — Admin{% endblock %}
+
+{% block content %}
+<div class="page-head admin-head">
+  <div class="container">
+    <div class="eyebrow">Admin</div>
+    <h1 class="page-title">Submissions</h1>
+    <p class="page-sub">Review community records before they go live.</p>
+  </div>
+</div>
+
+<div class="container section" style="padding-bottom:80px">
+  <div class="admin-nav">
+    <a href="/admin">Dashboard</a>
+    <a href="/admin/submissions" class="active">Submissions <span class="count-badge">{{ counts.pending }}</span></a>
+    <a href="/admin/places">Places</a>
+    <a href="/admin/users">Users</a>
+  </div>
+
+  <div class="admin-tabs">
+    <a href="/admin/submissions?status=pending" class="{{ 'active' if status == 'pending' else '' }}">Pending ({{ counts.pending }})</a>
+    <a href="/admin/submissions?status=approved" class="{{ 'active' if status == 'approved' else '' }}">Approved ({{ counts.approved }})</a>
+    <a href="/admin/submissions?status=rejected" class="{{ 'active' if status == 'rejected' else '' }}">Rejected ({{ counts.rejected }})</a>
+    <a href="/admin/submissions?status=all" class="{{ 'active' if status == 'all' else '' }}">All ({{ counts.all }})</a>
+  </div>
+
+  {% if submissions %}
+  <div class="surface-card admin-panel">
+    <div class="admin-list">
+      {% for s in submissions %}
+      <a class="admin-row" href="/admin/submissions/{{ s.id }}">
+        <span class="admin-row-title">
+          {% if s.images %}
+          <img src="{{ url_for('static', filename=s.images[0]) }}" alt="">
+          {% endif %}
+          <span>
+            <b>{{ s.title }}</b>
+            <small>{{ s.submitter.display if s.submitter else '—' }} · {{ s.governorate }} · {{ s.created_at|timeago }}</small>
+          </span>
+        </span>
+        <span class="badge status-badge {{ s.status|status_tone }}">{{ s.status|status_label }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  {% if pagination.pages > 1 %}
+  <nav class="pagination" aria-label="Pages">
+    {% if pagination.has_prev %}<a class="page-btn" href="/admin/submissions?status={{ status }}&page={{ pagination.prev_num }}" aria-label="Previous"><i data-lucide="chevron-left" class="icon"></i></a>{% endif %}
+    {% for p in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+      {% if p %}
+        {% if p == pagination.page %}<span class="page-btn active">{{ p }}</span>
+        {% else %}<a class="page-btn" href="/admin/submissions?status={{ status }}&page={{ p }}">{{ p }}</a>{% endif %}
+      {% else %}<span class="page-ellipsis">…</span>{% endif %}
+    {% endfor %}
+    {% if pagination.has_next %}<a class="page-btn" href="/admin/submissions?status={{ status }}&page={{ pagination.next_num }}" aria-label="Next"><i data-lucide="chevron-right" class="icon"></i></a>{% endif %}
+  </nav>
+  {% endif %}
+
+  {% else %}
+  <div class="surface-card admin-panel" style="text-align:center;padding:48px">
+    <p class="admin-empty">No submissions in this view.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

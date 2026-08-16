@@ -1,0 +1,49 @@
+{# Reusable UI macros #}
+
+{% macro category_badge(category) -%}
+  {% set tone = category_meta.get(category, {}).get('tone', 'cat-hidden') %}
+  <span class="badge category-badge {{ tone }}">{{ category }}</span>
+{%- endmacro %}
+
+{% macro verified_badge(place) -%}
+  {% if place.verified %}
+  <span class="badge verified-badge"><i data-lucide="shield-check" class="icon-sm"></i> Verified</span>
+  {% else %}
+  <span class="badge pending-badge"><i data-lucide="clock" class="icon-sm"></i> Community record</span>
+  {% endif %}
+{%- endmacro %}
+
+{% macro save_btn(place, light=False) -%}
+  <button type="button" class="save-btn{% if light %} save-btn-light{% endif %}" data-save-id="{{ place.slug }}" data-save-name="{{ place.title }}" aria-label="Save this place">
+    <i data-lucide="bookmark-plus" class="icon-sm"></i> Save
+  </button>
+{%- endmacro %}
+
+{% macro rating(place) -%}
+  {% if place.rating and place.rating > 0 %}
+  <span class="rating">
+    <span class="stars">{{ place.rating|stars }}</span>
+    <span class="rating-value">{{ "%.1f"|format(place.rating) }}</span>
+    <span class="rating-count">({{ place.rating_count }})</span>
+  </span>
+  {% endif %}
+{%- endmacro %}
+
+{% macro skeleton_card() -%}
+  <div class="skeleton-card">
+    <div class="skeleton skeleton-media"></div>
+    <div class="skeleton skeleton-line"></div>
+    <div class="skeleton skeleton-line short"></div>
+  </div>
+{%- endmacro %}
+
+{% macro empty_state(icon, title, body, action_label=None, action_href=None) -%}
+  <div class="empty-state">
+    <div class="empty-icon"><i data-lucide="{{ icon }}" class="icon-lg"></i></div>
+    <h3>{{ title }}</h3>
+    <p>{{ body }}</p>
+    {% if action_label and action_href %}
+    <a class="btn btn-accent" href="{{ action_href }}">{{ action_label }}</a>
+    {% endif %}
+  </div>
+{%- endmacro %}

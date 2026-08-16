@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}About — Kenzory{% endblock %}
+
+{% block content %}
+
+<section style="background:var(--primary);color:var(--primary-foreground);position:relative;overflow:hidden">
+  <div class="pattern-geo" style="position:absolute;inset:0;opacity:.4"></div>
+  <div class="container" style="position:relative;padding-block:72px;text-align:center">
+    <div class="eyebrow" style="color:var(--gold)">About Kenzory</div>
+    <h1 style="font-family:var(--font-display);font-size:clamp(2rem,4vw,3.2rem);margin-top:14px;max-width:720px;margin-inline:auto">
+      Discover. Document. Preserve.
+    </h1>
+    <p style="max-width:600px;margin:18px auto 0;color:oklch(0.97 0.01 85 / .75);line-height:1.75">
+      Kenzory is a community heritage platform mapping Egypt's lesser-known places — the buildings,
+      crafts, stories, and traditions hiding in plain sight. It is built by the people who know them best.
+    </p>
+  </div>
+</section>
+
+<section class="container section">
+  <div class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px">
+    {% for step in [
+      {"icon": "map-pin", "t": "Discover", "d": "Anyone can add a place they love — a monastery, a workshop, an abandoned station, a craft street."},
+      {"icon": "camera", "t": "Document", "d": "Add photos, history, and what you know. Personal memory is recorded honestly, never mixed with documented fact."},
+      {"icon": "shield-check", "t": "Verify", "d": "Reviewers check sources and confirm sites on the ground. Verified records earn the badge."},
+      {"icon": "heart-handshake", "t": "Preserve", "d": "Verified records join the living map — read by travellers, researchers, and neighbours who never knew."}
+    ] %}
+    <div class="surface-card" style="padding:24px">
+      <span class="cat-tile cat-architecture" style="width:48px;height:48px"><i data-lucide="{{ step.icon }}" class="icon-lg"></i></span>
+      <h3 style="font-family:var(--font-display);font-size:1.15rem;margin-top:14px">{{ step.t }}</h3>
+      <p style="color:var(--muted);font-size:.88rem;margin-top:8px;line-height:1.6">{{ step.d }}</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section style="background:var(--bg-2);border-block:1px solid var(--line)">
+  <div class="container section">
+    <div class="grid" style="display:grid;grid-template-columns:1.2fr 1fr;gap:56px;align-items:center">
+      <div>
+        <div class="eyebrow">Why it matters</div>
+        <h2 class="section-title">Heritage is not what survives.<br>It is what someone decides to keep.</h2>
+        <p style="color:var(--ink-soft);margin-top:16px;line-height:1.75">
+          Egypt's official monuments are only a fraction of the country's heritage. Around them are
+          thousands of places that matter to the people who live near them: the workshop where a craft
+          survived five centuries, the station clock still set to the last departure, the village that
+          painted its drowned home back onto its walls. These places usually exist only in memory —
+          and memory, unlike stone, is not protected.
+        </p>
+        <p style="color:var(--ink-soft);margin-top:14px;line-height:1.75">
+          Kenzory exists to write those memories down, keep documented history separate from memory,
+          and let a community of reviewers confirm what is true. One record can be enough to keep a
+          place from being forgotten.
+        </p>
+      </div>
+      <div class="surface-card" style="padding:26px">
+        <h3 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:16px">How verification works</h3>
+        <ul class="timeline">
+          <li>A record is submitted with sources and photos.</li>
+          <li>Two community reviewers check the claims against references.</li>
+          <li>A field visit or reliable local testimony confirms the site exists.</li>
+          <li>Documented history is kept separate from personal accounts.</li>
+          <li>The verified badge is added; the record joins the map.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="container section">
+  <div class="section-head">
+    <div>
+      <div class="eyebrow">The community</div>
+      <h2 class="section-title">Who's behind the records</h2>
+      <p class="section-sub">Contributors, photographers, editors, and reviewers — the people who make the map live.</p>
+    </div>
+  </div>
+  <div class="grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px">
+    {% for c in top_contributors %}
+    <div class="surface-card" style="padding:18px;display:flex;gap:14px;align-items:center">
+      <span style="width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:color-mix(in oklab,var(--accent) 14%, white);color:var(--accent-deep);font-weight:700">{{ c.initials }}</span>
+      <div>
+        <b style="font-size:.95rem">{{ c.display }}</b>
+        <span style="display:block;font-size:.76rem;color:var(--muted)">Contributor · {{ contributor_counts.get(c.id, 0) }} discover{{ 'y' if contributor_counts.get(c.id, 0) == 1 else 'ies' }}</span>
+      </div>
+      <i data-lucide="shield-check" class="icon" style="color:var(--verified);margin-left:auto"></i>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:44px">
+    <div class="surface-card" style="padding:22px;text-align:center">
+      <div class="hero-stat" style="margin:0 auto"><b style="font-size:2.2rem">{{ stats.places|num }}</b><span style="color:var(--muted)">Documented places</span></div>
+    </div>
+    <div class="surface-card" style="padding:22px;text-align:center">
+      <div class="hero-stat" style="margin:0 auto"><b style="font-size:2.2rem">{{ stats.governorates }}</b><span style="color:var(--muted)">Governorates</span></div>
+    </div>
+    <div class="surface-card" style="padding:22px;text-align:center">
+      <div class="hero-stat" style="margin:0 auto"><b style="font-size:2.2rem">{{ stats.photos|num }}</b><span style="color:var(--muted)">Community photos</span></div>
+    </div>
+    <div class="surface-card" style="padding:22px;text-align:center">
+      <div class="hero-stat" style="margin:0 auto"><b style="font-size:2.2rem">{{ stats.contributors }}</b><span style="color:var(--muted)">Active contributors</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="container" style="padding-bottom:80px">
+  <div class="surface-card" style="position:relative;overflow:hidden;background:var(--primary);border:none;border-radius:24px;padding:56px 32px;text-align:center;color:var(--primary-foreground)">
+    <div class="pattern-geo" style="position:absolute;inset:0;opacity:.3"></div>
+    <div style="position:relative">
+      <h2 style="font-family:var(--font-display);font-size:clamp(1.8rem,3.2vw,2.6rem)">The next record could be yours.</h2>
+      <p style="max-width:480px;margin:14px auto 24px;color:oklch(0.97 0.01 85 / .75)">Find a place that deserves to be remembered. Document it. The community will do the rest.</p>
+      <a class="btn btn-accent btn-lg" href="/add-place">Share a Discovery <i data-lucide="arrow-right" class="icon"></i></a>
+    </div>
+  </div>
+</section>
+{% endblock %}

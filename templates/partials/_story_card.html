@@ -1,0 +1,20 @@
+{% from "macros.html" import category_badge with context %}
+<article class="story-card{% if featured %} featured{% endif %}">
+  <a class="story-card-media" href="/stories/{{ story.slug }}"><img src="{{ story_image(story) }}" alt="{{ story.title }}" loading="lazy"></a>
+  <div class="story-card-body">
+    <div class="row-badges">
+      {{ category_badge(story.category) }}
+      {% if story.governorate %}<span class="badge category-badge cat-natural">{{ story.governorate }}</span>{% endif %}
+    </div>
+    <h3 class="story-card-title"><a href="/stories/{{ story.slug }}">{{ story.title }}</a></h3>
+    <p class="story-card-excerpt">{{ story.excerpt }}</p>
+    <div class="story-card-meta">
+      <span class="byline">
+        <span class="byline-avatar">{{ story.author.split()[:2]|map("first")|join("")|upper }}</span>
+        {{ story.author }}
+      </span>
+      <span>· {{ story.read_minutes }} min read</span>
+      <span>· {{ story.date }}</span>
+    </div>
+  </div>
+</article>

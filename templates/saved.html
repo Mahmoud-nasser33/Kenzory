@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Saved — Kenzory{% endblock %}
+
+{% block content %}
+<section class="container section" style="padding-bottom:80px">
+  <div class="section-head">
+    <div>
+      <div class="eyebrow">Your collection</div>
+      <h1 style="font-family:var(--font-display);font-size:clamp(1.9rem,3.4vw,2.8rem);margin-top:8px">Saved discoveries</h1>
+      <p class="section-sub">Records you've bookmarked for your next trip or your reading list. Stored locally on this device.</p>
+    </div>
+    <span class="results-count" id="saved-count"></span>
+  </div>
+
+  <div class="empty-state" id="saved-note" style="display:none">
+    <div class="empty-icon"><i data-lucide="bookmark" class="icon-lg"></i></div>
+    <h3>No saved discoveries yet</h3>
+    <p>Start exploring Egypt and save the places you want to remember — they'll appear here.</p>
+    <a class="btn btn-accent" href="/explore">Explore Egypt</a>
+  </div>
+
+  <div class="grid-cards" id="saved-grid"></div>
+</section>
+{% endblock %}
+
+{% block scripts_extra %}
+<script>
+  window.PLACES_JSON = {{ places_json | safe }};
+</script>
+<script src="{{ url_for('static', filename='js/saved.js') }}"></script>
+{% endblock %}

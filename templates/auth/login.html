@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Sign in — Kenzory{% endblock %}
+
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-card surface-card">
+    <div class="auth-brand">
+      <span class="brand-mark"><img src="{{ url_for('static', filename='img/kenzory-logo.svg') }}" alt="Kenzory logo" width="34" height="34"></span>
+      <h1>Welcome back</h1>
+      <p>Sign in to continue sharing Egypt's hidden heritage.</p>
+    </div>
+
+    {% if error %}
+    <div class="alert alert-error"><i data-lucide="alert-circle" class="icon-sm"></i><span>{{ error }}</span></div>
+    {% endif %}
+
+    <form method="post" action="/login?next={{ next or '' }}" class="stack-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="field">
+        <label for="identifier">Username or email</label>
+        <input type="text" id="identifier" name="identifier" value="{{ identifier }}" required autofocus autocomplete="username">
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required autocomplete="current-password">
+      </div>
+      <label class="checkbox">
+        <input type="checkbox" name="remember">
+        <span>Keep me signed in</span>
+      </label>
+      <button type="submit" class="btn btn-accent btn-block">Sign in</button>
+    </form>
+
+    <p class="auth-alt">New to Kenzory? <a href="/register">Create an account</a></p>
+  </div>
+</div>
+{% endblock %}

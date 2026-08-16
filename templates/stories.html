@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% from "macros.html" import empty_state with context %}
+{% block title %}Stories — Kenzory{% endblock %}
+
+{% block content %}
+<section class="container section" style="padding-bottom:20px">
+  <div class="section-head">
+    <div>
+      <div class="eyebrow">Stories</div>
+      <h1 style="font-family:var(--font-display);font-size:clamp(1.9rem,3.4vw,2.8rem);margin-top:8px">The human side of heritage</h1>
+      <p class="section-sub">Long-form accounts from the community — the people who kept the keys, the crafts that refused to die, and the places that refused to disappear.</p>
+    </div>
+  </div>
+
+  <form method="get" action="/stories" class="search-bar" style="max-width:560px;margin-bottom:24px">
+    <i data-lucide="search" class="icon"></i>
+    <input type="text" name="q" value="{{ q }}" placeholder="Search stories, authors, places…" aria-label="Search stories">
+    <button type="submit">Search</button>
+  </form>
+
+  {% if stories %}
+  <p class="results-count" style="margin-bottom:18px"><b>{{ stories|length }}</b> stor{{ 'y' if stories|length == 1 else 'ies' }}{% if q %} for “{{ q }}”{% endif %}</p>
+  <div class="card-grid">
+    {% for story in stories %}
+      {% include "partials/_story_card.html" %}
+    {% endfor %}
+  </div>
+  {% else %}
+    {{ empty_state("book-open", "No stories found", "No long-form accounts match your search yet. Try a different term.") }}
+  {% endif %}
+</section>
+{% endblock %}

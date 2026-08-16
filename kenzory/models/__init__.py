@@ -1,0 +1,32 @@
+"""Database models. Import them all here so `db.create_all()` and Alembic
+autogenerate see every table."""
+
+from kenzory.models.category import Category
+from kenzory.models.place import (
+    PUBLIC_STATUSES,
+    STATUS_APPROVED,
+    STATUS_PENDING,
+    STATUS_REJECTED,
+    HeritagePlace,
+)
+from kenzory.models.story import Story
+from kenzory.models.submission import (
+    SUBMISSION_STATUSES,
+    Submission,
+)
+from kenzory.models.user import ROLE_ADMIN, ROLE_USER, User
+
+__all__ = [
+    "PUBLIC_STATUSES",
+    "STATUS_APPROVED",
+    "STATUS_PENDING",
+    "STATUS_REJECTED",
+    "SUBMISSION_STATUSES",
+    "ROLE_ADMIN",
+    "ROLE_USER",
+    "Category",
+    "HeritagePlace",
+    "Story",
+    "Submission",
+    "User",
+]

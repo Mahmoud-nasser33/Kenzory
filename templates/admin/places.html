@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Places — Admin{% endblock %}
+
+{% block content %}
+<div class="page-head admin-head">
+  <div class="container">
+    <div class="eyebrow">Admin</div>
+    <h1 class="page-title">Places</h1>
+    <p class="page-sub">All heritage records in the database.</p>
+  </div>
+</div>
+
+<div class="container section" style="padding-bottom:80px">
+  <div class="admin-nav">
+    <a href="/admin">Dashboard</a>
+    <a href="/admin/submissions">Submissions</a>
+    <a href="/admin/places" class="active">Places</a>
+    <a href="/admin/users">Users</a>
+  </div>
+
+  {% if places %}
+  <div class="surface-card admin-panel">
+    <div class="admin-list">
+      {% for p in places %}
+      <a class="admin-row" href="/place/{{ p.slug }}">
+        <span class="admin-row-title">
+          <img src="{{ place_image(p) }}" alt="">
+          <span>
+            <b>{{ p.title }}</b>
+            <small>{{ p.category.name if p.category else '—' }} · {{ p.governorate }} · {{ p.created_at|timeago }}</small>
+          </span>
+        </span>
+        <span class="admin-row-meta">
+          <span class="badge status-badge {{ p.status|status_tone }}">{{ p.status|status_label }}</span>
+          {% if p.featured %}<span class="badge category-badge cat-hidden">Featured</span>{% endif %}
+          <span class="admin-row-chevron"><i data-lucide="chevron-right" class="icon-sm"></i></span>
+        </span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  {% if pagination.pages > 1 %}
+  <nav class="pagination" aria-label="Pages">
+    {% if pagination.has_prev %}<a class="page-btn" href="/admin/places?page={{ pagination.prev_num }}" aria-label="Previous"><i data-lucide="chevron-left" class="icon"></i></a>{% endif %}
+    {% for p in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+      {% if p %}
+        {% if p == pagination.page %}<span class="page-btn active">{{ p }}</span>
+        {% else %}<a class="page-btn" href="/admin/places?page={{ p }}">{{ p }}</a>{% endif %}
+      {% else %}<span class="page-ellipsis">…</span>{% endif %}
+    {% endfor %}
+    {% if pagination.has_next %}<a class="page-btn" href="/admin/places?page={{ pagination.next_num }}" aria-label="Next"><i data-lucide="chevron-right" class="icon"></i></a>{% endif %}
+  </nav>
+  {% endif %}
+
+  {% else %}
+  <div class="surface-card admin-panel" style="text-align:center;padding:48px">
+    <p class="admin-empty">No places yet.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

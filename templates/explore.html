@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% from "macros.html" import empty_state with context %}
+{% block title %}Explore — Kenzory{% endblock %}
+
+{% block content %}
+<div class="page-head explore-head">
+  <div class="container">
+    <h1 class="page-title">Explore</h1>
+    <p class="page-sub">Browse documented heritage across {{ governorates|length }} governorates.</p>
+    <form action="/explore" method="get" class="search-form search-form-lg">
+      <i data-lucide="search" class="search-icon"></i>
+      <input type="search" name="q" value="{{ filters.q }}" placeholder="Search monuments, neighborhoods, crafts…" aria-label="Search">
+      {% if filters.category %}<input type="hidden" name="category" value="{{ filters.category }}">{% endif %}
+      {% if filters.governorate %}<input type="hidden" name="governorate" value="{{ filters.governorate }}">{% endif %}
+      {% if filters.period %}<input type="hidden" name="period" value="{{ filters.period }}">{% endif %}
+      {% if filters.view %}<input type="hidden" name="view" value="{{ filters.view }}">{% endif %}
+      <button type="submit" class="btn btn-accent">Search</button>
+    </form>
+  </div>
+</div>
+
+<section class="explore-layout">
+  <div class="container">
+    <aside class="filter-panel surface-card">
+      <div class="filter-head">
+        <h3>Filters</h3>
+        <a class="filter-clear" href="/explore">Reset all</a>
+      </div>
+      <form method="get" action="/explore" id="filter-form">
+        <input type="hidden" name="q" value="{{ filters.q }}">
+        <input type="hidden" name="sort" value="{{ filters.sort }}">
+        <input type="hidden" name="view" value="{{ filters.view }}">
+
+        <div class="filter-group">
+          <h4>Category</h4>
+          <label class="filter-option">
+            <input type="radio" name="category" value="" {% if not filters.category %}checked{% endif %}>
+            <span>All categories</span>
+          </label>
+          {% for c in categories %}
+          <label class="filter-option">
+            <input type="radio" name="category" value="{{ c.slug }}" {% if filters.category == c.slug %}checked{% endif %}>
+            <span>{{ c.name }} <em>{{ category_counts.get(c.slug, 0) }}</em></span>
+          </label>
+          {% endfor %}
+        </div>
+
+        <div class="filter-group">
+          <h4>Governorate</h4>
+          <select name="governorate" class="select">
+            <option value="">All governorates</option>
+            {% for g in governorates %}
+            <option value="{{ g }}" {% if filters.governorate == g %}selected{% endif %}>{{ g }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <h4>Era / Period</h4>
+          <select name="period" class="select">
+            <option value="">All periods</option>
+            {% for p in periods %}
+            <option value="{{ p }}" {% if filters.period == p %}selected{% endif %}>{{ p }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-accent btn-block">Apply filters</button>
+      </form>
+    </aside>
+
+    <div class="explore-results">
+      <div class="results-toolbar">
+        <div class="results-count"><b>{{ pagination.total }}</b> place{{ '' if pagination.total == 1 else 's' }}{% if filters.q %} for “{{ filters.q }}”{% endif %}</div>
+        <div class="results-controls">
+          <form method="get" action="/explore" class="sort-form">
+            <label class="control-label" for="sort">Sort</label>
+            <input type="hidden" name="q" value="{{ filters.q }}">
+            <input type="hidden" name="category" value="{{ filters.category }}">
+            <input type="hidden" name="governorate" value="{{ filters.governorate }}">
+            <input type="hidden" name="period" value="{{ filters.period }}">
+            <input type="hidden" name="view" value="{{ filters.view }}">
+            <select id="sort" name="sort" class="select select-sm" onchange="this.form.submit()">
+              {% for key, label in sorts.items() %}
+              <option value="{{ key }}" {% if filters.sort == key %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </form>
+          <div class="view-toggle" role="group" aria-label="View">
+            <a class="{% if filters.view == 'grid' %}active{% endif %}" href="{{ url_for('explore.explore', q=filters.q, category=filters.category, governorate=filters.governorate, period=filters.period, sort=filters.sort, view='grid') }}" title="Grid view"><i data-lucide="grid-3x3" class="icon"></i></a>
+            <a class="{% if filters.view == 'list' %}active{% endif %}" href="{{ url_for('explore.explore', q=filters.q, category=filters.category, governorate=filters.governorate, period=filters.period, sort=filters.sort, view='list') }}" title="List view"><i data-lucide="list" class="icon"></i></a>
+          </div>
+        </div>
+      </div>
+
+      {% if places %}
+      <div class="card-grid{% if filters.view == 'list' %} card-grid-list{% endif %}">
+        {% for place in places %}
+          {% if filters.view == 'list' %}
+            {% include "partials/_place_row.html" %}
+          {% else %}
+            {% include "partials/_place_card.html" %}
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      {% if pagination.pages > 1 %}
+      <nav class="pagination" aria-label="Pages">
+        {% if pagination.has_prev %}
+        <a class="page-btn" href="{{ url_for('explore.explore', q=filters.q, category=filters.category, governorate=filters.governorate, period=filters.period, sort=filters.sort, view=filters.view, page=pagination.prev_num) }}" aria-label="Previous"><i data-lucide="chevron-left" class="icon"></i></a>
+        {% endif %}
+        {% for p in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+          {% if p %}
+            {% if p == pagination.page %}
+            <span class="page-btn active">{{ p }}</span>
+            {% else %}
+            <a class="page-btn" href="{{ url_for('explore.explore', q=filters.q, category=filters.category, governorate=filters.governorate, period=filters.period, sort=filters.sort, view=filters.view, page=p) }}">{{ p }}</a>
+            {% endif %}
+          {% else %}
+            <span class="page-ellipsis">…</span>
+          {% endif %}
+        {% endfor %}
+        {% if pagination.has_next %}
+        <a class="page-btn" href="{{ url_for('explore.explore', q=filters.q, category=filters.category, governorate=filters.governorate, period=filters.period, sort=filters.sort, view=filters.view, page=pagination.next_num) }}" aria-label="Next"><i data-lucide="chevron-right" class="icon"></i></a>
+        {% endif %}
+      </nav>
+      {% endif %}
+
+      {% else %}
+        {{ empty_state("search", "No results found", "Try a different search, or clear the filters to see everything we've documented.") }}
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<script>window.PLACES_JSON = {{ places_json|safe }};</script>
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='js/saved.js') }}"></script>
+<script src="{{ url_for('static', filename='js/place.js') }}"></script>
+{% endblock %}

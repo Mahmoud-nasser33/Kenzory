@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}Submission #{{ submission.id }} — Admin{% endblock %}
+
+{% block content %}
+<div class="container section" style="padding-bottom:80px">
+  <a class="back-link" href="/admin/submissions"><i data-lucide="arrow-left" class="icon"></i> Back to submissions</a>
+
+  <div class="admin-detail-head">
+    <div>
+      <div class="row-badges" style="margin-bottom:8px">
+        <span class="badge status-badge {{ submission.status|status_tone }}">{{ submission.status|status_label }}</span>
+        {% if submission.category %}<span class="badge category-badge cat-hidden">{{ submission.category.name }}</span>{% endif %}
+        {% if submission.period %}<span class="badge category-badge cat-natural">{{ submission.period }}</span>{% endif %}
+      </div>
+      <h1 style="font-family:var(--font-display);font-size:clamp(1.7rem,3vw,2.4rem)">{{ submission.title }}</h1>
+      {% if submission.title_ar %}<div class="ar">{{ submission.title_ar }}</div>{% endif %}
+      <p class="profile-meta">
+        Submitted by <b>{{ submission.submitter.display if submission.submitter else '—' }}</b>
+        · {{ submission.created_at|timeago }}
+        {% if submission.submitted_by == (current_user.id if current_user.is_authenticated else -1) %}· yours{% endif %}
+      </p>
+    </div>
+
+    {% if submission.status == 'pending' %}
+    <form method="post" action="/admin/submissions/{{ submission.id }}/reject" class="admin-quick-reject" onsubmit="return confirm('Reject this submission?')">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="review_note" value="Rejected by reviewer.">
+      <button type="submit" class="btn btn-danger">Reject</button>
+    </form>
+    {% endif %}
+  </div>
+
+  <div class="admin-detail-grid">
+    <div class="admin-detail-main">
+      {% if submission.images %}
+      <div class="gallery">
+        {% for img in submission.images %}
+        <img src="{{ url_for('static', filename=img) }}" alt="{{ submission.title }} — photo {{ loop.index }}" loading="lazy">
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="surface-card admin-detail-section">
+        <h3>Summary</h3>
+        <p>{{ submission.summary }}</p>
+      </div>
+
+      {% if submission.description %}
+      <div class="surface-card admin-detail-section">
+        <h3>Description</h3>
+        <p>{{ submission.description }}</p>
+      </div>
+      {% endif %}
+
+      {% if submission.historical_information %}
+      <div class="surface-card admin-detail-section">
+        <h3>Historical information</h3>
+        <p>{{ submission.historical_information }}</p>
+      </div>
+      {% endif %}
+
+      {% if submission.sources %}
+      <div class="surface-card admin-detail-section">
+        <h3>Sources</h3>
+        <p>{{ submission.sources }}</p>
+      </div>
+      {% endif %}
+
+      {% if submission.status == 'rejected' and submission.review_note %}
+      <div class="surface-card admin-detail-section">
+        <h3>Rejection note</h3>
+        <div class="review-note"><i data-lucide="message-square" class="icon-sm"></i> <span>{{ submission.review_note }}</span></div>
+      </div>
+      {% endif %}
+    </div>
+
+    <aside class="admin-detail-side">
+      <div class="surface-card sidebar-card">
+        <h3>Location</h3>
+        <div class="side-info-row"><span><i data-lucide="map-pin" class="icon"></i>Governorate</span><b>{{ submission.governorate }}</b></div>
+        <div class="side-info-row"><span><i data-lucide="navigation" class="icon"></i>Area</span><b>{{ submission.location }}</b></div>
+        {% if submission.latitude and submission.longitude %}
+        <div class="side-info-row"><span><i data-lucide="compass" class="icon"></i>Coordinates</span><b>{{ "%.4f"|format(submission.latitude) }}, {{ "%.4f"|format(submission.longitude) }}</b></div>
+        {% endif %}
+      </div>
+
+      {% if submission.status == 'pending' %}
+      <form method="post" action="/admin/submissions/{{ submission.id }}/approve" class="surface-card sidebar-card">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <h3>Decision</h3>
+        <div class="field">
+          <label for="review_note">Note for contributor <em class="opt">optional</em></label>
+          <textarea id="review_note" name="review_note" rows="3" placeholder="Optional message shown to the contributor after approval."></textarea>
+        </div>
+        <button type="submit" class="btn btn-accent btn-block">Approve &amp; publish</button>
+        <button type="button" class="btn btn-outline btn-block" onclick="this.closest('form').action='/admin/submissions/{{ submission.id }}/reject';this.closest('form').submit()">Reject instead</button>
+      </form>
+      {% endif %}
+    </aside>
+  </div>
+</div>
+{% endblock %}
