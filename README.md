@@ -44,4 +44,3 @@ Planned features and edits for the upcoming iterations:
 - **Better maps** — marker clustering, distance-from-you, and offline-friendly tiles.
 - **Notifications** — emails when a submission is approved or a story is published.
 - **Community** — contributor profiles with activity and achievement badges.
-- **Deployment** — production hosting on PostgreSQL behind HTTPS with a real domain.
