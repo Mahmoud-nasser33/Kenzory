@@ -21,15 +21,19 @@ What's in the project today:
 - **Auth & accounts** — register/login (username or email), password hashing, protected
   routes, open-redirect and CSRF protection. Profiles, saved places, and own
   submissions with status badges.
+- **Ratings & reviews** — signed-in visitors rate places (1–5 stars) and leave short
+  reviews on each place page. One review per person (edit or remove it anytime);
+  averages and counts stay in sync automatically and feed the cards, sorting,
+  and "highest rated" ordering everywhere.
 - **Seed content** — a curated set of 7 real heritage places (each with a genuine
-  photograph) and 4 stories, plus categories and development users.
+  photograph), 4 stories, community reviews, plus categories and development users.
 
 ### Tech stack
 
 - Python 3.8+, Flask 3.0
 - SQLAlchemy 2.0 + Flask-SQLAlchemy (SQLite in development, PostgreSQL-ready)
 - Flask-Migrate for schema migrations, Flask-Login for sessions
-- Pillow for image validation, pytest for the test suite (41 passing)
+- Pillow for image validation, pytest for the test suite (51 passing)
 
 ## Next phases
 
@@ -37,7 +41,6 @@ Planned features and edits for the upcoming iterations:
 
 - **More curated content** — replace remaining demo data with verified heritage places,
   each documented with real photos, coordinates, and sources.
-- **Ratings & reviews** — let visitors rate places and leave short reviews.
 - **Richer contributions** — edit existing places, upload multiple photos with captions,
   and let the community vote on pending submissions.
 - **Arabic support** — a full Arabic interface and Arabic search.

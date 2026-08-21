@@ -1481,3 +1481,143 @@
     right: 16px;
   }
 }
+
+/* ============================================================
+   Ratings & reviews
+   ============================================================ */
+
+.reviews-section .rating-summary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  white-space: nowrap;
+}
+
+.rating-big {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.reviews-layout {
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.review-form-card {
+  padding: 22px;
+  position: sticky;
+  top: 90px;
+}
+
+.review-form-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  margin-bottom: 14px;
+}
+
+/* star input — DOM order is 5..1, row-reverse shows 1..5 left-to-right */
+.star-rating {
+  display: inline-flex;
+  flex-direction: row-reverse;
+  gap: 4px;
+  position: relative;
+}
+
+.star-rating input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.star-rating label {
+  cursor: pointer;
+  color: var(--line);
+  display: grid;
+  place-items: center;
+  padding: 2px;
+  border-radius: 6px;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.star-rating label svg {
+  width: 26px;
+  height: 26px;
+  fill: transparent;
+  transition: fill 0.15s ease;
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label,
+.star-rating input:checked ~ label {
+  color: var(--gold);
+}
+
+.star-rating label:hover svg,
+.star-rating label:hover ~ label svg,
+.star-rating input:checked ~ label svg {
+  fill: var(--gold);
+}
+
+.star-rating label:hover {
+  transform: scale(1.12);
+}
+
+.star-rating input:focus-visible ~ label {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+.review-item {
+  padding: 18px 20px;
+}
+
+.review-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.review-head .stars {
+  color: var(--gold);
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+}
+
+.review-date {
+  margin-left: auto;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.review-body {
+  color: var(--ink-soft);
+  line-height: 1.65;
+  font-size: 0.92rem;
+}
+
+@media (max-width: 900px) {
+  .reviews-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .review-form-card {
+    position: static;
+  }
+
+  .rating-big {
+    font-size: 1.9rem;
+  }
+}

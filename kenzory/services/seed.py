@@ -5,6 +5,7 @@ database. This runs only on demand via ``flask seed`` and is intentionally
 separate from application logic and production data.
 """
 
+import hashlib
 import os
 from datetime import datetime, timedelta
 
@@ -12,8 +13,9 @@ from flask import current_app
 
 from kenzory import seed_data
 from kenzory.extensions import db
-from kenzory.models import Category, HeritagePlace, Story, User
+from kenzory.models import Category, HeritagePlace, Review, Story, User
 from kenzory.services.covers import ensure_cover
+from kenzory.services.reviews import recompute_all_ratings
 
 DEV_PASSWORD = os.getenv("KENZORY_SEED_PASSWORD", "Kenzory123!")
 ADMIN_PASSWORD = os.getenv("KENZORY_ADMIN_PASSWORD", "Admin123!")
@@ -205,6 +207,73 @@ def seed_stories(places):
         db.session.add(story)
 
 
+def seed_reviews(places, users):
+    """Deterministic community reviews backing the seeded rating aggregates.
+
+    Star ratings jitter around each place's intended rating so recomputed
+    averages land close to the curated value, and every displayed count is a
+    real row in the reviews table.
+    """
+    bodies = [
+        "A magical spot — well worth the detour.",
+        "The keeper showed us around. Unforgettable hospitality.",
+        "Quiet at sunrise; go early and you'll have it to yourself.",
+        "One of my favourite finds this year.",
+        "Needs some restoration, but the history is palpable.",
+        "The kids loved it — an easy visit, under an hour.",
+        "Photos don't do it justice.",
+        "A real piece of living local heritage.",
+        "Small site, but rich in stories.",
+        "Signage is lacking, so ask locals for directions.",
+        "The kind of place that makes you look twice at your own city.",
+        "Peaceful, atmospheric, and completely unspoilt.",
+    ]
+
+    def h(*parts):
+        digest = hashlib.md5(":".join(parts).encode("utf-8")).hexdigest()
+        return int(digest, 16)
+
+    usernames = [u for u in users if u != "admin"]
+    for place in places:
+        raw = next((p for p in seed_data.PLACES if p["id"] == place.slug), {})
+        target = float(raw.get("rating", 4.0) or 4.0)
+        base = max(1, min(5, int(round(target))))
+
+        reviewer_count = 4 + h(place.slug, "n") % 8
+        chosen = sorted(usernames, key=lambda name: h(place.slug, name))[:reviewer_count]
+
+        for username in chosen:
+            roll = h(place.slug, username) % 10
+            if roll < 2:
+                stars = base - 1
+            elif roll < 8:
+                stars = base
+            else:
+                stars = base + 1
+            stars = max(1, min(5, stars))
+
+            body = ""
+            if h(place.slug, username, "b") % 3 != 0:
+                body = bodies[h(place.slug, username, "t") % len(bodies)]
+
+            created_at = datetime.utcnow() - timedelta(
+                days=5 + h(place.slug, username, "d") % 120,
+                hours=h(place.slug, username, "h") % 24,
+            )
+            db.session.add(
+                Review(
+                    place_id=place.id,
+                    user_id=users[username].id,
+                    rating=stars,
+                    body=body,
+                    created_at=created_at,
+                    updated_at=created_at,
+                )
+            )
+    db.session.flush()
+    recompute_all_ratings()
+
+
 def run_seed(reset=False):
     """Populate the database with development content.
 
@@ -221,5 +290,6 @@ def run_seed(reset=False):
     categories = seed_categories()
     places = seed_places(categories, users)
     seed_stories(places)
+    seed_reviews(places, users)
     db.session.commit()
     return True

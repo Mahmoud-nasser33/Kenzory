@@ -130,6 +130,79 @@
   </aside>
 </div>
 
+<section class="container section reviews-section" id="reviews">
+  <div class="section-head">
+    <div>
+      <div class="eyebrow">Community reviews</div>
+      <h2 class="section-title">Ratings &amp; reviews</h2>
+    </div>
+    {% if place.rating_count %}
+    <div class="rating-summary">
+      <b class="rating-big">{{ "%.1f"|format(place.rating) }}</b>
+      <span>
+        <span class="stars">{{ place.rating|stars }}</span>
+        <span class="results-count">{{ place.rating_count }} review{{ 's' if place.rating_count != 1 }}</span>
+      </span>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="reviews-layout">
+    <aside class="review-form-card surface-card">
+      {% if current_user.is_authenticated %}
+      <h3>{{ 'Update your review' if my_review else 'Rate this place' }}</h3>
+      <form method="post" action="/place/{{ place.slug }}/review" class="stack-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="field">
+          <label class="control-label">Your rating</label>
+          <div class="star-rating" role="radiogroup" aria-label="Your rating from 1 to 5 stars">
+            {% for v in [5, 4, 3, 2, 1] %}
+            <input type="radio" id="rate-{{ v }}" name="rating" value="{{ v }}" required {% if my_review and my_review.rating == v %}checked{% endif %}>
+            <label for="rate-{{ v }}" title="{{ v }} out of 5"><i data-lucide="star"></i></label>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="field">
+          <label for="review_body">Your review <em class="opt">optional</em></label>
+          <textarea id="review_body" name="body" rows="4" maxlength="1000" placeholder="What was it like? What should other visitors know?">{{ my_review.body if my_review else '' }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-accent btn-block">{{ 'Update review' if my_review else 'Post review' }}</button>
+      </form>
+      {% if my_review %}
+      <form method="post" action="/place/{{ place.slug }}/review/delete" style="margin-top:10px">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="btn btn-outline btn-sm btn-block">Remove my review</button>
+      </form>
+      {% endif %}
+      {% else %}
+      <h3>Visited this place?</h3>
+      <p style="color:var(--muted);font-size:.9rem;margin:10px 0 16px">Sign in to rate it and share your experience with the community.</p>
+      <a class="btn btn-accent btn-block" href="/login?next={{ request.path }}">Sign in to review</a>
+      {% endif %}
+    </aside>
+
+    <div class="reviews-list">
+      {% for r in reviews %}
+      <article class="review-item surface-card">
+        <div class="review-head">
+          <span class="byline-avatar">{{ r.user.initials }}</span>
+          <b>{{ r.user.display }}</b>
+          <span class="stars">{{ r.rating|stars }}</span>
+          <span class="review-date">{{ r.created_at|timeago }}</span>
+        </div>
+        {% if r.body %}<p class="review-body">{{ r.body }}</p>{% endif %}
+      </article>
+      {% else %}
+      <div class="empty-state">
+        <div class="empty-icon"><i data-lucide="star" class="icon-lg"></i></div>
+        <h3>No reviews yet</h3>
+        <p>Be the first to rate this place and share what you saw.</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
 <section class="container section" style="padding-top:20px">
   <div class="section-head">
     <div>
