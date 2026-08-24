@@ -4,7 +4,7 @@ from flask import Blueprint, render_template
 from flask_login import current_user
 
 from kenzory.models import HeritagePlace
-from kenzory.services.places import place_images, place_image, related_places
+from kenzory.services.places import gallery_items, place_image, related_places
 from kenzory.services.reviews import get_review, place_reviews, rating_distribution
 
 places_bp = Blueprint("places", __name__)
@@ -23,7 +23,7 @@ def place_detail(slug):
         "place.html",
         place=place,
         related=related_places(place),
-        gallery=place_images(place),
+        gallery=gallery_items(place),
         place_image=place_image,
         reviews=reviews,
         my_review=my_review,

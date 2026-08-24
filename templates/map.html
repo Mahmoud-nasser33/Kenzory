@@ -10,7 +10,16 @@
   </div>
   <div class="map-canvas">
     <div id="map"></div>
+    <button type="button" class="map-locate-btn" id="locate-btn" title="Show my location" aria-label="Show my location">
+      <i data-lucide="locate-fixed" class="icon"></i>
+    </button>
     <div class="map-legend" id="map-legend"></div>
+    <div class="map-nearest" id="map-nearest" hidden></div>
+    <div class="map-offline-banner" id="map-offline-banner" hidden>
+      <i data-lucide="wifi-off" class="icon-sm"></i>
+      <span>You seem to be offline — map tiles can't load, but place pins and popups still work.</span>
+      <button type="button" data-dismiss aria-label="Dismiss">&times;</button>
+    </div>
   </div>
 </div>
 {% endblock %}

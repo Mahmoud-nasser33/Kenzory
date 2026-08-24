@@ -1,0 +1,80 @@
+{# Shared fields for the add/edit place forms.
+   Expects in context: form, errors, categories, governorates, periods. #}
+<h2 class="form-section-title">The place</h2>
+<div class="field">
+  <label for="title">Name of the place <em>*</em></label>
+  <input type="text" id="title" name="title" value="{{ form.get('title', '') }}" required placeholder="e.g. El-Kab, the forgotten city">
+  {% if errors.get('title') %}<span class="field-error">{{ errors['title'] }}</span>{% endif %}
+</div>
+<div class="field">
+  <label for="title_ar">Name in Arabic <em class="opt">optional</em></label>
+  <input type="text" id="title_ar" name="title_ar" value="{{ form.get('title_ar', '') }}" dir="rtl" placeholder="الاسم بالعربية">
+</div>
+<div class="field">
+  <label for="summary">What is it, and why does it matter? <em>*</em></label>
+  <textarea id="summary" name="summary" rows="3" required placeholder="At least two sentences — what the place is, what it means to the people who know it.">{{ form.get('summary', '') }}</textarea>
+  {% if errors.get('summary') %}<span class="field-error">{{ errors['summary'] }}</span>{% endif %}
+</div>
+
+<h2 class="form-section-title">History &amp; details</h2>
+<div class="field">
+  <label for="historical_information">Historical background</label>
+  <textarea id="historical_information" name="historical_information" rows="5" placeholder="What do we know about its history? Where do you know it from — a book, a sign, a neighbour, an oral account?">{{ form.get('historical_information', '') }}</textarea>
+</div>
+<div class="field">
+  <label for="description">More detail — architecture, craftsmanship, atmosphere</label>
+  <textarea id="description" name="description" rows="4" placeholder="Describe the place itself: its look, materials, sounds, how people use it today.">{{ form.get('description', '') }}</textarea>
+</div>
+<div class="field">
+  <label for="sources">Sources <em class="opt">optional</em></label>
+  <input type="text" id="sources" name="sources" value="{{ form.get('sources', '') }}" placeholder="e.g. Supreme Council of Antiquities records; interview with the keeper (2019)">
+</div>
+
+<h2 class="form-section-title">Where is it?</h2>
+<div class="field">
+  <label for="governorate">Governorate <em>*</em></label>
+  <select id="governorate" name="governorate" required>
+    <option value="">Choose a governorate</option>
+    {% for g in governorates %}
+    <option value="{{ g }}" {% if form.get('governorate') == g %}selected{% endif %}>{{ g }}</option>
+    {% endfor %}
+  </select>
+  {% if errors.get('governorate') %}<span class="field-error">{{ errors['governorate'] }}</span>{% endif %}
+</div>
+<div class="field">
+  <label for="location">Nearest city or area <em>*</em></label>
+  <input type="text" id="location" name="location" value="{{ form.get('location', '') }}" required placeholder="e.g. Izbat El-Borg">
+  {% if errors.get('location') %}<span class="field-error">{{ errors['location'] }}</span>{% endif %}
+</div>
+<div class="field-row">
+  <div class="field">
+    <label for="latitude">Latitude <em class="opt">optional</em></label>
+    <input type="number" step="any" id="latitude" name="latitude" value="{{ form.get('latitude', '') or '' }}" placeholder="e.g. 26.8206">
+  </div>
+  <div class="field">
+    <label for="longitude">Longitude <em class="opt">optional</em></label>
+    <input type="number" step="any" id="longitude" name="longitude" value="{{ form.get('longitude', '') or '' }}" placeholder="e.g. 31.3312">
+  </div>
+</div>
+<p class="field-hint">Prefer to skip the coordinates? Fine — reviewers can locate it from the area above.</p>
+
+<h2 class="form-section-title">Categorise it</h2>
+<div class="field">
+  <label for="category">Category <em>*</em></label>
+  <select id="category" name="category" required>
+    <option value="">Choose a category</option>
+    {% for c in categories %}
+    <option value="{{ c.id }}" {% if form.get('category')|string == c.id|string %}selected{% endif %}>{{ c.name }}</option>
+    {% endfor %}
+  </select>
+  {% if errors.get('category') %}<span class="field-error">{{ errors['category'] }}</span>{% endif %}
+</div>
+<div class="field">
+  <label for="period">Era / period <em class="opt">optional</em></label>
+  <select id="period" name="period">
+    <option value="">Not sure / n/a</option>
+    {% for p in periods %}
+    <option value="{{ p }}" {% if form.get('period') == p %}selected{% endif %}>{{ p }}</option>
+    {% endfor %}
+  </select>
+</div>

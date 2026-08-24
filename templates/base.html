@@ -41,6 +41,7 @@
             </div>
             <a href="/profile"><i data-lucide="user" class="icon-sm"></i> My profile</a>
             <a href="/submissions"><i data-lucide="layers" class="icon-sm"></i> My submissions</a>
+            <a href="/community-review"><i data-lucide="thumbs-up" class="icon-sm"></i> Community review</a>
             {% if current_user.is_admin %}
             <a href="/admin"><i data-lucide="shield" class="icon-sm"></i> Admin dashboard</a>
             {% endif %}
@@ -78,6 +79,7 @@
     {% if current_user.is_authenticated %}
       <a class="drawer-link" href="/profile"><i data-lucide="user" class="icon"></i> My profile</a>
       <a class="drawer-link" href="/submissions"><i data-lucide="layers" class="icon"></i> My submissions</a>
+      <a class="drawer-link" href="/community-review"><i data-lucide="thumbs-up" class="icon"></i> Community review</a>
       {% if current_user.is_admin %}
       <a class="drawer-link" href="/admin"><i data-lucide="shield" class="icon"></i> Admin dashboard</a>
       {% endif %}

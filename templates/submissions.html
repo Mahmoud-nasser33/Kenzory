@@ -28,6 +28,9 @@
         <div class="row-badges" style="margin-bottom:8px">
           <span class="badge status-badge {{ s.status|status_tone }}">{{ s.status|status_label }}</span>
           {% if s.category %}<span class="badge category-badge cat-hidden">{{ s.category.name }}</span>{% endif %}
+          {% if s.status == 'pending' %}
+          <span class="badge"><i data-lucide="thumbs-up" class="icon-sm"></i> {{ vote_counts.get(s.id, 0) }} endorsement{{ 's' if vote_counts.get(s.id, 0) != 1 }}</span>
+          {% endif %}
         </div>
         <h3>{{ s.title }}</h3>
         <p>

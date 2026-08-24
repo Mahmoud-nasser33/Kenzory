@@ -16,6 +16,7 @@ from kenzory.models.submission import (
     Submission,
 )
 from kenzory.models.user import ROLE_ADMIN, ROLE_USER, User
+from kenzory.models.vote import SubmissionVote
 
 __all__ = [
     "PUBLIC_STATUSES",
@@ -33,5 +34,6 @@ __all__ = [
     "Review",
     "Story",
     "Submission",
+    "SubmissionVote",
     "User",
 ]

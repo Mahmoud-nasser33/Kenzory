@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Edit {{ place.title }} — Kenzory{% endblock %}
+
+{% block content %}
+<div class="page-head add-place-head">
+  <div class="container">
+    <div class="eyebrow">Contribute</div>
+    <h1 class="page-title">Edit “{{ place.title }}”</h1>
+    <p class="page-sub">Improve the record — fix details, refresh the story, or curate its photos. Changes are saved immediately.</p>
+  </div>
+</div>
+
+<div class="container add-place-layout">
+  <div class="surface-card form-card">
+    <form method="post" action="{{ url_for('contributions.edit_place', slug=place.slug) }}" enctype="multipart/form-data" class="stack-form" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      {% include "partials/_place_fields.html" %}
+
+      <h2 class="form-section-title">Current photos</h2>
+      <p class="field-hint">Untick a photo to remove it from the record. Captions show under each photo in the gallery.</p>
+      {% if errors.get('photos') %}<span class="field-error">{{ errors['photos'] }}</span>{% endif %}
+      <div class="gallery-manager" id="gallery-manager">
+        {% for path in gallery %}
+        <div class="gallery-manage-item {% if not loop.first %}not-cover{% endif %}">
+          <img src="{{ url_for('static', filename=path) }}" alt="Photo {{ loop.index }}">
+          <label class="checkbox keep-check">
+            <input type="checkbox" name="keep_{{ loop.index0 }}" checked>
+            <span>Keep</span>
+          </label>
+          {% if loop.first %}<span class="cover-tag">Cover photo</span>{% endif %}
+          <input type="hidden" name="path_{{ loop.index0 }}" value="{{ path }}">
+          <input type="text" name="caption_{{ loop.index0 }}" value="{{ captions.get(path, '') }}" maxlength="140" placeholder="Caption (optional)">
+        </div>
+        {% else %}
+        <p class="field-hint">This record currently has no photos — please upload at least one below.</p>
+        {% endfor %}
+      </div>
+
+      <h2 class="form-section-title">Add photos</h2>
+      <div class="field">
+        <label for="new_photos">Upload more photos <em class="opt">up to 5 per save, JPG/PNG/WebP</em></label>
+        <div class="drop-zone" id="drop-zone">
+          <i data-lucide="camera" class="icon-lg"></i>
+          <p>Drag photos here or <b>browse</b> from your device</p>
+          <input type="file" id="new_photos" name="new_photos" accept="image/*" multiple hidden>
+        </div>
+        <div class="photo-preview" id="photo-preview"></div>
+      </div>
+
+      <label class="checkbox">
+        <input type="checkbox" name="terms" {% if form.get('terms') %}checked{% endif %}>
+        <span>I confirm these changes are accurate to the best of my knowledge, and I have the right to share any photos I upload.</span>
+      </label>
+      {% if errors.get('terms') %}<span class="field-error">{{ errors['terms'] }}</span>{% endif %}
+
+      <button type="submit" class="btn btn-accent btn-block btn-lg">Save changes</button>
+    </form>
+  </div>
+
+  <aside class="add-place-side">
+    <div class="surface-card sidebar-card">
+      <h3>Editing tips</h3>
+      <ul class="timeline">
+        <li>The first kept photo becomes the record's cover.</li>
+        <li>Captions are a great place for “who”, “when” and “what you see”.</li>
+        <li>Removed uploads are deleted right away; curated seed photos stay on disk.</li>
+        <li>Sources help reviewers and readers trust the record.</li>
+      </ul>
+    </div>
+    <div class="surface-card sidebar-card">
+      <h3>See it live</h3>
+      <p style="font-size:.9rem;color:var(--muted)">Your record is already published.</p>
+      <a class="btn btn-outline btn-sm btn-block" href="{{ url_for('places.place_detail', slug=place.slug) }}">View public page</a>
+    </div>
+  </aside>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='js/photo-input.js') }}"></script>
+{% endblock %}

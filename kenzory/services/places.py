@@ -23,7 +23,21 @@ def place_image(place):
 
 def place_images(place):
     """List of absolute URLs for a place's gallery."""
-    return [url_for("static", filename=path) for path in place.gallery if path]
+    return [item["url"] for item in gallery_items(place)]
+
+
+def gallery_items(place):
+    """Gallery entries as [{url, caption}] preserving order."""
+    captions = place.photo_captions or {}
+    return [
+        {
+            "path": path,
+            "url": url_for("static", filename=path),
+            "caption": captions.get(path, ""),
+        }
+        for path in (place.gallery or [])
+        if path
+    ]
 
 
 def place_json(place):

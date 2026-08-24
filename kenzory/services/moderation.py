@@ -46,6 +46,7 @@ def approve_submission(submission, reviewer, note=None):
         period=submission.period or "Not specified",
         image=image,
         gallery=gallery,
+        photo_captions=dict(submission.image_captions or {}),
         sources=([submission.sources] if submission.sources else []),
         photos=len(gallery),
         status="approved",

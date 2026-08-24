@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% from "macros.html" import empty_state, category_badge with context %}
+{% block title %}Community review — Kenzory{% endblock %}
+
+{% block content %}
+<section class="container section" style="padding-bottom:80px">
+  <div class="section-head">
+    <div>
+      <div class="eyebrow">Community review</div>
+      <h1 style="font-family:var(--font-display);font-size:clamp(1.9rem,3.4vw,2.8rem);margin-top:8px">Help review new discoveries</h1>
+      <p class="section-sub">These records are waiting for moderation. Read them, and endorse the ones you can vouch for — reviewers see the endorsements.</p>
+    </div>
+    <a class="btn btn-accent btn-sm" href="/add-place"><i data-lucide="plus" class="icon-sm"></i> New submission</a>
+  </div>
+
+  {% if submissions %}
+  <div class="feed-list">
+    {% for s in submissions %}
+    <article class="surface-card feed-item">
+      <div class="sub-thumb">
+        {% if s.images %}
+        <img src="{{ url_for('static', filename=s.images[0]) }}" alt="{{ s.title }}" loading="lazy">
+        {% else %}
+        <div class="sub-thumb-placeholder"><i data-lucide="map-pin" class="icon-lg"></i></div>
+        {% endif %}
+      </div>
+      <div>
+        <div class="row-badges" style="margin-bottom:8px">
+          <span class="badge status-badge st-pending">{{ vote_counts.get(s.id, 0) }} endorsement{{ 's' if vote_counts.get(s.id, 0) != 1 }}</span>
+          {% if s.category %}{{ category_badge(s.category.name) }}{% endif %}
+        </div>
+        <h3>{{ s.title }}{% if s.title_ar %} <span class="ar" style="font-weight:400">· {{ s.title_ar }}</span>{% endif %}</h3>
+        <p>{{ s.summary }}</p>
+        <div class="feed-meta">
+          {% if s.location %}<span><i data-lucide="map-pin" class="icon-sm"></i> {{ s.location }}{% if s.governorate %}, {{ s.governorate }}{% endif %}</span>{% endif %}
+          {% if s.submitter %}<span><i data-lucide="user" class="icon-sm"></i> {{ s.submitter.display }}</span>{% endif %}
+          <span><i data-lucide="clock" class="icon-sm"></i> {{ s.created_at|timeago }}</span>
+        </div>
+        <form method="post" action="{{ url_for('contributions.vote', submission_id=s.id) }}" style="margin-top:12px">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          {% if s.submitted_by == current_user.id %}
+          <button type="button" class="btn btn-outline btn-sm" disabled title="You can't endorse your own submission"><i data-lucide="thumbs-up" class="icon-sm"></i> Your submission</button>
+          {% elif s.id in voted_ids %}
+          <button type="submit" class="btn btn-outline btn-sm voted"><i data-lucide="thumbs-up" class="icon-sm"></i> Endorsed — undo?</button>
+          {% else %}
+          <button type="submit" class="btn btn-outline btn-sm"><i data-lucide="thumbs-up" class="icon-sm"></i> Endorse</button>
+          {% endif %}
+        </form>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+    {{ empty_state("check-circle-2", "Nothing waiting right now", "Every submission has been reviewed. Share the next discovery yourself!", "Share a Discovery", "/add-place") }}
+  {% endif %}
+</section>
+{% endblock %}

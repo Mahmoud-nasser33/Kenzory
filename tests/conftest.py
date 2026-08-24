@@ -64,3 +64,22 @@ def make_user_client(app, username="tester", password="password123"):
         },
     )
     return client
+
+
+def login_client(app, username, password):
+    """Sign in an existing account on a fresh client."""
+    client = app.test_client()
+    client.post("/login", data={"identifier": username, "password": password})
+    return client
+
+
+def png_file(name="photo.png", color="tomato"):
+    """An in-memory valid PNG suitable for upload tests."""
+    import io
+
+    from PIL import Image
+
+    buf = io.BytesIO()
+    Image.new("RGB", (24, 24), color).save(buf, format="PNG")
+    buf.seek(0)
+    return (buf, name)

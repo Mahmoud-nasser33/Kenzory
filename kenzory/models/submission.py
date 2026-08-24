@@ -31,6 +31,8 @@ class Submission(db.Model):
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
     images = db.Column(db.JSON, default=list)
+    # Maps image path -> caption text, for photos uploaded with captions.
+    image_captions = db.Column(db.JSON, default=dict)
 
     category_id = db.Column(
         db.Integer, db.ForeignKey("categories.id"), nullable=False, index=True

@@ -25,6 +25,11 @@
       <button type="button" class="btn btn-outline btn-sm" id="share-btn" style="border-color:oklch(1 0 0 / .3);color:var(--primary-foreground)">
         <i data-lucide="share-2" class="icon-sm"></i> Share
       </button>
+      {% if current_user.is_authenticated and (current_user.is_admin or place.created_by == current_user.id) %}
+      <a class="btn btn-outline btn-sm edit-place-btn" href="{{ url_for('contributions.edit_place', slug=place.slug) }}">
+        <i data-lucide="pencil" class="icon-sm"></i> Edit
+      </a>
+      {% endif %}
     </div>
   </div>
 </section>
@@ -75,7 +80,10 @@
     <h2>Gallery</h2>
     <div class="gallery" id="gallery">
       {% for g in gallery %}
-      <img src="{{ g }}" alt="{{ place.title }} — photo {{ loop.index }}" loading="lazy" data-lightbox>
+      <figure class="gallery-figure">
+        <img src="{{ g.url }}" alt="{{ place.title }} — photo {{ loop.index }}" loading="lazy" data-lightbox>
+        {% if g.caption %}<figcaption>{{ g.caption }}</figcaption>{% endif %}
+      </figure>
       {% endfor %}
     </div>
     {% endif %}

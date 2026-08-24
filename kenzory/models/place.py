@@ -41,6 +41,8 @@ class HeritagePlace(db.Model):
 
     image = db.Column(db.String(255))  # relative path inside /static
     gallery = db.Column(db.JSON, default=list)
+    # Maps gallery path -> caption text (parallel to ``gallery``).
+    photo_captions = db.Column(db.JSON, default=dict)
 
     key_facts = db.Column(db.JSON, default=list)
     timeline = db.Column(db.JSON, default=list)
