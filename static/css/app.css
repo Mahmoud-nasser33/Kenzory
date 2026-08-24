@@ -1,9 +1,3 @@
-/* ============================================================
-   Kenzory — application components
-   Loaded AFTER style.css. Covers auth, admin, forms, alerts,
-   explore toolbar, pagination, and small UI pieces.
-   ============================================================ */
-
 /* ---------- buttons ---------- */
 
 .btn-lg {
@@ -1519,7 +1513,7 @@
   margin-bottom: 14px;
 }
 
-/* star input � DOM order is 5..1, row-reverse shows 1..5 left-to-right */
+/* star input — DOM order is 5..1, row-reverse shows 1..5 left-to-right */
 .star-rating {
   display: inline-flex;
   flex-direction: row-reverse;
