@@ -1,9 +1,3 @@
-"""Kenzory entrypoint.
-
-Run with ``flask --app app.py run`` or ``python app.py``. Configuration is read
-from environment variables (optionally from a local ``.env`` file).
-"""
-
 import os
 
 from dotenv import load_dotenv
