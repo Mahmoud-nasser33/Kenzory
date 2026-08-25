@@ -21,6 +21,8 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(255), nullable=False)
     display_name = db.Column(db.String(120), nullable=False, default="")
     profile_image = db.Column(db.String(255))
+    bio = db.Column(db.Text, nullable=False, default="")
+    level = db.Column(db.String(40), nullable=False, default="Contributor")
     role = db.Column(db.String(20), nullable=False, default=ROLE_USER)
 
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
@@ -65,6 +67,15 @@ class User(UserMixin, db.Model):
     @property
     def approved_place_count(self):
         return sum(1 for p in self.places if p.status == "approved")
+
+    @property
+    def review_count(self):
+        return len(self.reviews)
+
+    @property
+    def endorsement_count(self):
+        from kenzory.models.vote import SubmissionVote
+        return SubmissionVote.query.filter_by(user_id=self.id).count()
 
     def __repr__(self):
         return f"<User {self.username!r}>"

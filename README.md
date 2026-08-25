@@ -34,6 +34,10 @@ What's in the project today:
   zooms (expanding as you zoom in), a locate control shows your position with a
   "distance from you" line in every popup plus a nearest-records panel, and an
   offline banner appears if map tiles can't load while pins keep working.
+- **Community profiles** — contributor profiles with bio and level, a gamified badge
+  system (8 achievement badges), a reputation score with progress bar, and public
+  contributor pages at `/contributor/<username>`. Place cards and detail pages link
+  to the contributor who documented them.
 - **Seed content** — a curated set of 7 real heritage places (each with a genuine
   photograph), 4 stories, community reviews, plus categories and development users.
 
@@ -42,7 +46,7 @@ What's in the project today:
 - Python 3.8+, Flask 3.0
 - SQLAlchemy 2.0 + Flask-SQLAlchemy (SQLite in development, PostgreSQL-ready)
 - Flask-Migrate for schema migrations, Flask-Login for sessions
-- Pillow for image validation, pytest for the test suite (66 passing)
+- Pillow for image validation, pytest for the test suite (94 passing)
 
 ## Next phases
 
@@ -52,4 +56,3 @@ Planned features and edits for the upcoming iterations:
   each documented with real photos, coordinates, and sources.
 - **Arabic support** — a full Arabic interface and Arabic search.
 - **Notifications** — emails when a submission is approved or a story is published.
-- **Community** — contributor profiles with activity and achievement badges.

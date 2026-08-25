@@ -1,10 +1,11 @@
-"""User profile."""
+"""User profiles — own profile and public contributor pages."""
 
-from flask import Blueprint, render_template
+from flask import Blueprint, abort, render_template
 from flask_login import current_user
 
 from kenzory.auth import login_required
-from kenzory.models import HeritagePlace, Submission
+from kenzory.models import HeritagePlace, User
+from kenzory.services.profile import get_profile_data, LEVELS
 
 profile_bp = Blueprint("profile", __name__)
 
@@ -12,22 +13,22 @@ profile_bp = Blueprint("profile", __name__)
 @profile_bp.route("/profile")
 @login_required
 def profile():
-    places = (
-        HeritagePlace.query.filter_by(created_by=current_user.id)
-        .order_by(HeritagePlace.created_at.desc())
-        .all()
-    )
-    submissions = (
-        Submission.query.filter_by(submitted_by=current_user.id)
-        .order_by(Submission.created_at.desc())
-        .all()
-    )
-    pending = sum(1 for s in submissions if s.status == "pending")
-    approved = sum(1 for s in submissions if s.status == "approved")
-    rejected = sum(1 for s in submissions if s.status == "rejected")
-    return render_template(
-        "profile.html",
-        places=places,
-        submissions=submissions,
-        counts={"pending": pending, "approved": approved, "rejected": rejected},
-    )
+    data = get_profile_data(current_user)
+    data["max_reputation"] = _next_level_threshold(data["reputation"])
+    return render_template("profile.html", **data)
+
+
+@profile_bp.route("/contributor/<username>")
+def contributor(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    data = get_profile_data(user)
+    data["max_reputation"] = _next_level_threshold(data["reputation"])
+    return render_template("contributor.html", **data)
+
+
+def _next_level_threshold(reputation):
+    """Return the next reputation threshold for the progress bar."""
+    for threshold, _name in LEVELS:
+        if reputation < threshold:
+            return threshold
+    return LEVELS[-1][0]

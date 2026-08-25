@@ -875,6 +875,27 @@ button {
   height: 14px;
 }
 
+.place-card-contributor {
+  margin-left: auto;
+}
+
+.place-card-contributor a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--ink-soft);
+  transition: color 0.15s ease;
+}
+
+.place-card-contributor a:hover {
+  color: var(--accent);
+}
+
+.place-card-contributor .icon-sm {
+  width: 12px;
+  height: 12px;
+}
+
 .save-btn {
   display: inline-flex;
   align-items: center;

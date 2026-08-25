@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 {% from "macros.html" import empty_state with context %}
-{% block title %}My profile — Kenzory{% endblock %}
+{% block title %}{{ user.display }} — Kenzory contributor{% endblock %}
 
 {% block content %}
 <section class="profile-hero">
   <div class="container">
     <div class="profile-card">
-      <span class="profile-avatar">{{ current_user.initials }}</span>
+      <span class="profile-avatar">{{ user.initials }}</span>
       <div>
-        <h1>{{ current_user.display }}</h1>
-        <p class="profile-meta">@{{ current_user.username }} · Member since {{ current_user.created_at.strftime('%B %Y') }}{% if current_user.is_admin %} · <span class="badge verified-badge">Staff</span>{% endif %}</p>
+        <h1>{{ user.display }}</h1>
+        <p class="profile-meta">@{{ user.username }} · Member since {{ user.created_at.strftime('%B %Y') }}{% if user.is_admin %} · <span class="badge verified-badge">Staff</span>{% endif %}</p>
       </div>
       <div class="profile-stats">
         <div class="stat"><b>{{ place_count }}</b><span>places</span></div>
@@ -26,23 +26,22 @@
     {# ---- Sidebar ---- #}
     <aside>
       <div class="surface-card profile-card" style="text-align:left">
-        <span class="profile-avatar">{{ current_user.initials }}</span>
-        <div class="profile-handle">{{ current_user.display }}</div>
+        <span class="profile-avatar">{{ user.initials }}</span>
+        <div class="profile-handle">{{ user.display }}</div>
         <div style="color:var(--accent);font-size:.84rem;font-weight:700;margin-top:4px">
           <i data-lucide="award" class="icon-sm"></i> {{ level }}
         </div>
-        {% if current_user.bio %}
-        <p class="profile-bio">{{ current_user.bio }}</p>
+        {% if user.bio %}
+        <p class="profile-bio">{{ user.bio }}</p>
         {% endif %}
 
         <div class="profile-stats" style="margin-top:18px">
           <div class="profile-stat"><b>{{ place_count }}</b><span>places</span></div>
           <div class="profile-stat"><b>{{ review_count }}</b><span>reviews</span></div>
           <div class="profile-stat"><b>{{ photos }}</b><span>photos</span></div>
-          <div class="profile-stat"><b>{{ counts.pending }}</b><span>pending</span></div>
+          <div class="profile-stat"><b>{{ endorsement_count }}</b><span>endorsements</span></div>
         </div>
 
-        {# ---- Reputation bar ---- #}
         <div class="reputation-bar">
           <div class="reputation-row">
             <span>Reputation</span>
@@ -62,7 +61,6 @@
         </div>
       </div>
 
-      {# ---- Badges ---- #}
       <div class="surface-card" style="margin-top:20px;padding:20px">
         <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:4px">Badges</h3>
         <p style="color:var(--muted);font-size:.82rem;margin-bottom:12px">{{ badges|selectattr('earned')|list|length }} of {{ badges|length }} earned</p>
@@ -84,10 +82,9 @@
     <div>
       <div class="section-head">
         <div>
-          <div class="eyebrow">Your work</div>
-          <h2 class="section-title">Places you've documented</h2>
+          <div class="eyebrow">Contributions</div>
+          <h2 class="section-title">Heritage places by {{ user.display }}</h2>
         </div>
-        <a class="btn btn-accent btn-sm" href="/add-place"><i data-lucide="plus" class="icon-sm"></i> Share a Discovery</a>
       </div>
 
       {% if places %}
@@ -95,37 +92,7 @@
         {% for place in places %}{% include "partials/_place_card.html" %}{% endfor %}
       </div>
       {% else %}
-        {{ empty_state("map-pin", "No live records yet", "Once a reviewer approves your first submission, it will appear here.", "Share a Discovery", "/add-place") }}
-      {% endif %}
-
-      {% if submissions %}
-      <div class="section-head" style="margin-top:56px">
-        <div>
-          <div class="eyebrow">Queue</div>
-          <h2 class="section-title">Submissions</h2>
-        </div>
-        <a class="btn btn-outline btn-sm" href="/submissions">All submissions</a>
-      </div>
-      <div class="feed-list">
-        {% for s in submissions %}
-        <article class="surface-card feed-item">
-          <div class="sub-thumb">
-            {% if s.images %}
-            <img src="{{ url_for('static', filename=s.images[0]) }}" alt="{{ s.title }}" loading="lazy">
-            {% else %}
-            <div class="sub-thumb-placeholder"><i data-lucide="map-pin" class="icon-lg"></i></div>
-            {% endif %}
-          </div>
-          <div>
-            <div class="row-badges" style="margin-bottom:8px">
-              <span class="badge status-badge {{ s.status|status_tone }}">{{ s.status|status_label }}</span>
-            </div>
-            <h3>{{ s.title }}</h3>
-            <p style="color:var(--muted);font-size:.85rem"><i data-lucide="clock" class="icon-sm"></i> Submitted {{ s.created_at|timeago }}</p>
-          </div>
-        </article>
-        {% endfor %}
-      </div>
+        {{ empty_state("map-pin", "No heritage places yet", "This contributor hasn't had any places approved yet.") }}
       {% endif %}
     </div>
   </div>

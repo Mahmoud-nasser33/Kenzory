@@ -57,11 +57,27 @@ def _resolve_image(key, slug, category, name_ar, name_en, city):
 
 def seed_users():
     users = []
+    bios = {
+        "mahmoud": "Cairo-based editor and contributor. I document the places the guidebooks skip.",
+        "dina": "I explore Upper Egypt's hidden monasteries and craft workshops.",
+        "omar": "Alexandria native covering Delta architecture and Ottoman heritage.",
+        "laila": "Photographer documenting Egypt's natural heritage and rock-cut temples.",
+        "karim": "Railway enthusiast and heritage station hunter.",
+        "youssef": "Pharaonic specialist with a focus on Middle Kingdom sites.",
+        "sara": "Desert heritage researcher covering the Western Oasis.",
+        "mostafa": "Cairo's old city — its crafts, cafes, and gates.",
+        "hana": "Food and culture contributor from the Nile Delta.",
+        "mariam": "Coptic heritage and monastic tradition researcher.",
+        "norhan": "Traditional crafts and living heritage documentarian.",
+        "khalid": "Southern Upper Egypt heritage guide and contributor.",
+    }
     for username, meta in seed_data.CONTRIBUTORS.items():
         user = User(
             username=username,
             email=f"{username}@kenzory.example",
             display_name=meta["name"],
+            bio=bios.get(username, ""),
+            level=meta.get("level", "Contributor"),
             role="user",
         )
         user.set_password(DEV_PASSWORD)
@@ -72,6 +88,8 @@ def seed_users():
         username="admin",
         email="admin@kenzory.example",
         display_name="Kenzory Admin",
+        bio="Platform administrator and editor.",
+        level="Heritage Guardian",
         role="admin",
     )
     admin.set_password(ADMIN_PASSWORD)

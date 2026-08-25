@@ -15,6 +15,7 @@
       {% if place.saves %}<span><i data-lucide="bookmark" class="icon-sm"></i> {{ place.saves|num }}</span>{% endif %}
       {% if place.photos %}<span><i data-lucide="camera" class="icon-sm"></i> {{ place.photos }}</span>{% endif %}
       {% if place.verified %}<span class="badge verified-badge"><i data-lucide="shield-check" class="icon-sm"></i> Verified</span>{% endif %}
+      {% if place.creator %}<span class="place-card-contributor"><a href="/contributor/{{ place.creator.username }}"><i data-lucide="user" class="icon-sm"></i> {{ place.creator.display }}</a></span>{% endif %}
     </div>
   </div>
 </article>

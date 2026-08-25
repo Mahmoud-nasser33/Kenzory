@@ -117,10 +117,10 @@
     <div class="surface-card sidebar-card">
       <h3>Documented by</h3>
       <div class="byline">
-        <span class="byline-avatar">{{ place.creator.initials }}</span>
+        <a href="/contributor/{{ place.creator.username }}" class="byline-avatar">{{ place.creator.initials }}</a>
         <div>
-          <b style="font-size:.95rem">{{ place.creator.display }}</b>
-          <span style="display:block;font-size:.78rem;color:var(--muted)">Contributor{% if place.creator.is_admin %} · Staff{% endif %} · added {{ place.created_at|timeago }}</span>
+          <a href="/contributor/{{ place.creator.username }}" style="font-size:.95rem"><b>{{ place.creator.display }}</b></a>
+          <span style="display:block;font-size:.78rem;color:var(--muted)">{{ place.creator.level }}{% if place.creator.is_admin %} · Staff{% endif %} · added {{ place.created_at|timeago }}</span>
         </div>
       </div>
     </div>
