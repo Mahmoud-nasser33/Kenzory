@@ -56,6 +56,11 @@ def upsert_review(place, user, rating, body):
     review.updated_at = datetime.utcnow()
     db.session.flush()
     recompute_rating(place)
+
+    if created and place.created_by != user.id:
+        from kenzory.services.notifications import notify_review_received
+        notify_review_received(place, user)
+
     return review, created
 
 

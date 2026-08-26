@@ -290,4 +290,83 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
+  /* notification bell dropdown */
+  const notifBell = document.getElementById("notif-bell-btn");
+  const notifDropdown = document.getElementById("notif-dropdown");
+  const notifList = document.getElementById("notif-dropdown-list");
+  if (notifBell && notifDropdown) {
+    const notifMenu = notifBell.closest(".notif-menu");
+    notifBell.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const open = notifMenu.classList.toggle("open");
+      notifBell.setAttribute("aria-expanded", String(open));
+      if (open && notifList && !notifList.dataset.loaded) {
+        loadNotifDropdown();
+      }
+    });
+    document.addEventListener("click", (e) => {
+      if (!notifMenu.contains(e.target)) {
+        notifMenu.classList.remove("open");
+        notifBell.setAttribute("aria-expanded", "false");
+      }
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        notifMenu.classList.remove("open");
+        notifBell.setAttribute("aria-expanded", "false");
+      }
+    });
+    loadNotifBadge();
+  }
+
+  function loadNotifBadge() {
+    fetch("/notifications/unread-count")
+      .then((r) => r.json())
+      .then((d) => {
+        const badge = document.querySelector(".js-notif-badge");
+        if (!badge) return;
+        if (d.count > 0) {
+          badge.textContent = d.count > 99 ? "99+" : String(d.count);
+          badge.style.display = "";
+        } else {
+          badge.style.display = "none";
+        }
+      })
+      .catch(() => {});
+  }
+
+  function loadNotifDropdown() {
+    fetch("/notifications/recent")
+      .then((r) => r.json())
+      .then((d) => {
+        if (!notifList) return;
+        notifList.dataset.loaded = "1";
+        if (!d.notifications || d.notifications.length === 0) {
+          notifList.innerHTML = '<div class="notif-dropdown-empty">No notifications yet</div>';
+          return;
+        }
+        notifList.innerHTML = d.notifications.map((n) => {
+          const iconMap = {
+            submission_approved: "check-circle-2",
+            submission_rejected: "x-circle",
+            review_received: "star",
+            endorsement_received: "thumbs-up",
+            badge_earned: "award",
+          };
+          const icon = iconMap[n.type] || "bell";
+          const unread = n.is_read ? "" : " unread";
+          const dot = n.is_read ? "" : '<span class="notif-dropdown-dot"></span>';
+          return `<a href="${esc(n.link)}" class="notif-dropdown-item${unread}">
+            <span class="notif-dropdown-icon"><i data-lucide="${icon}" class="icon-sm"></i></span>
+            <span class="notif-dropdown-body"><b>${esc(n.title)}</b><p>${esc(n.message)}</p></span>
+            ${dot}
+          </a>`;
+        }).join("");
+        refreshIcons();
+      })
+      .catch(() => {
+        if (notifList) notifList.innerHTML = '<div class="notif-dropdown-empty">Couldn\'t load notifications</div>';
+      });
+  }
 });

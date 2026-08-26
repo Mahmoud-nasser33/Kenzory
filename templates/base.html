@@ -31,6 +31,22 @@
       <a class="icon-btn" href="/saved" aria-label="Saved discoveries"><i data-lucide="bookmark" class="icon"></i><span class="dot js-saved-dot" style="display:none"></span></a>
 
       {% if current_user.is_authenticated %}
+        <div class="notif-menu">
+          <button type="button" class="icon-btn" id="notif-bell-btn" aria-label="Notifications" aria-haspopup="true" aria-expanded="false">
+            <i data-lucide="bell" class="icon"></i>
+            <span class="notif-badge js-notif-badge" style="display:none"></span>
+          </button>
+          <div class="notif-dropdown" id="notif-dropdown">
+            <div class="notif-dropdown-head">
+              <b>Notifications</b>
+              <a href="/notifications" class="notif-view-all">View all</a>
+            </div>
+            <div class="notif-dropdown-list" id="notif-dropdown-list">
+              <div class="notif-dropdown-empty">Loading...</div>
+            </div>
+          </div>
+        </div>
+
         <a class="btn btn-accent btn-sm header-cta" href="/add-place">Share a Discovery</a>
         <div class="user-menu">
           <button type="button" class="avatar" id="user-menu-btn" aria-label="Account menu" aria-haspopup="true" aria-expanded="false">{{ current_user.initials }}</button>
@@ -78,6 +94,7 @@
     <a class="drawer-link" href="/saved"><i data-lucide="bookmark" class="icon"></i> Saved</a>
     {% if current_user.is_authenticated %}
       <a class="drawer-link" href="/profile"><i data-lucide="user" class="icon"></i> My profile</a>
+      <a class="drawer-link" href="/notifications"><i data-lucide="bell" class="icon"></i> Notifications</a>
       <a class="drawer-link" href="/submissions"><i data-lucide="layers" class="icon"></i> My submissions</a>
       <a class="drawer-link" href="/community-review"><i data-lucide="thumbs-up" class="icon"></i> Community review</a>
       {% if current_user.is_admin %}

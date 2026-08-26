@@ -45,8 +45,14 @@ What's in the project today:
 
 - Python 3.8+, Flask 3.0
 - SQLAlchemy 2.0 + Flask-SQLAlchemy (SQLite in development, PostgreSQL-ready)
-- Flask-Migrate for schema migrations, Flask-Login for sessions
-- Pillow for image validation, pytest for the test suite (94 passing)
+- Flask-Migrate for schema migrations, Flask-Login for sessions, Flask-Mail for emails
+- Pillow for image validation, pytest for the test suite (108 passing)
+
+## Features
+
+- **In-app notifications** — bell icon with unread badge, dropdown preview, paginated notifications page, mark-as-read.
+- **Email delivery** — optional SMTP emails via Flask-Mail (suppressed by default in dev; set `MAIL_SUPPRESS_SEND=false` to enable).
+- **Notification triggers** — submission approved/rejected, new review, new endorsement.
 
 ## Next phases
 
@@ -55,4 +61,3 @@ Planned features and edits for the upcoming iterations:
 - **More curated content** — replace remaining demo data with verified heritage places,
   each documented with real photos, coordinates, and sources.
 - **Arabic support** — a full Arabic interface and Arabic search.
-- **Notifications** — emails when a submission is approved or a story is published.

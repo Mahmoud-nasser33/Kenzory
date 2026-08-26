@@ -23,6 +23,9 @@ def toggle_vote(submission, user):
     else:
         db.session.add(SubmissionVote(submission_id=submission.id, user_id=user.id))
         voted = True
+        if submission.submitted_by != user.id:
+            from kenzory.services.notifications import notify_endorsement_received
+            notify_endorsement_received(submission, user)
     db.session.commit()
     return voted, vote_count(submission)
 

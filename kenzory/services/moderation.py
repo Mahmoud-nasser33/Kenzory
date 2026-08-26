@@ -3,8 +3,9 @@
 from datetime import datetime
 
 from kenzory.extensions import db
-from kenzory.models import HeritagePlace, Submission
+from kenzory.models import HeritagePlace, Submission, User
 from kenzory.services.covers import ensure_cover
+from kenzory.services.notifications import notify_submission_approved, notify_submission_rejected
 from kenzory.services.security import slugify
 
 
@@ -57,6 +58,11 @@ def approve_submission(submission, reviewer, note=None):
     submission.reviewer_id = reviewer.id
     submission.review_note = (note or "").strip() or None
     submission.reviewed_at = datetime.utcnow()
+
+    submitter = db.session.get(User, submission.submitted_by)
+    if submitter:
+        notify_submission_approved(place, submitter)
+
     db.session.commit()
     return place
 
@@ -66,4 +72,7 @@ def reject_submission(submission, reviewer, note):
     submission.reviewer_id = reviewer.id
     submission.review_note = (note or "").strip() or None
     submission.reviewed_at = datetime.utcnow()
+
+    notify_submission_rejected(submission, note)
+
     db.session.commit()

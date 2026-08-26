@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% from "macros.html" import empty_state with context %}
+{% block title %}Notifications — Kenzory{% endblock %}
+
+{% block content %}
+<section class="container section" style="padding-bottom:80px">
+  <div class="section-head">
+    <div>
+      <div class="eyebrow">Activity</div>
+      <h1 style="font-family:var(--font-display);font-size:clamp(1.9rem,3.4vw,2.8rem);margin-top:8px">Notifications</h1>
+      <p class="section-sub">Updates on your submissions, reviews, and community activity.</p>
+    </div>
+    {% if pagination.total > 0 %}
+    <form method="post" action="{{ url_for('notifications.mark_all') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button type="submit" class="btn btn-outline btn-sm"><i data-lucide="check-check" class="icon-sm"></i> Mark all read</button>
+    </form>
+    {% endif %}
+  </div>
+
+  {% if pagination.items %}
+  <div class="notif-list">
+    {% for n in pagination.items %}
+    <a href="{{ n.link or '#' }}" class="notif-item surface-card {% if not n.is_read %}notif-unread{% endif %}"
+       onclick="markNotifRead({{ n.id }}, this)">
+      <div class="notif-icon">
+        {% if n.type == 'submission_approved' %}
+        <i data-lucide="check-circle-2" class="icon"></i>
+        {% elif n.type == 'submission_rejected' %}
+        <i data-lucide="x-circle" class="icon"></i>
+        {% elif n.type == 'review_received' %}
+        <i data-lucide="star" class="icon"></i>
+        {% elif n.type == 'endorsement_received' %}
+        <i data-lucide="thumbs-up" class="icon"></i>
+        {% elif n.type == 'badge_earned' %}
+        <i data-lucide="award" class="icon"></i>
+        {% else %}
+        <i data-lucide="bell" class="icon"></i>
+        {% endif %}
+      </div>
+      <div class="notif-body">
+        <b class="notif-title">{{ n.title }}</b>
+        <p class="notif-msg">{{ n.message }}</p>
+        <span class="notif-time">{{ n.created_at|timeago }}</span>
+      </div>
+      {% if not n.is_read %}<span class="notif-dot"></span>{% endif %}
+    </a>
+    {% endfor %}
+  </div>
+
+  {% if pagination.pages > 1 %}
+  <nav class="pagination" aria-label="Notifications">
+    {% if pagination.has_prev %}
+    <a class="btn btn-outline btn-sm" href="{{ url_for('notifications.index', page=pagination.prev_num) }}">← Newer</a>
+    {% endif %}
+    <span class="page-info">Page {{ pagination.page }} of {{ pagination.pages }}</span>
+    {% if pagination.has_next %}
+    <a class="btn btn-outline btn-sm" href="{{ url_for('notifications.index', page=pagination.next_num) }}">Older →</a>
+    {% endif %}
+  </nav>
+  {% endif %}
+
+  {% else %}
+    {{ empty_state("bell", "No notifications yet", "You'll see updates about your submissions, reviews, and community activity here.") }}
+  {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts_extra %}
+<script>
+function markNotifRead(id, el) {
+  fetch("/notifications/" + id + "/read", {
+    method: "POST",
+    headers: {"X-CSRFToken": "{{ csrf_token() }}", "X-Requested-With": "XMLHttpRequest"}
+  }).then(() => { el.classList.remove("notif-unread"); const dot = el.querySelector(".notif-dot"); if (dot) dot.remove(); });
+}
+</script>
+{% endblock %}

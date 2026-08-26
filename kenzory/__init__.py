@@ -12,7 +12,7 @@ from flask import Flask, render_template
 
 from kenzory.config import get_config
 from kenzory.constants import GOVERNORATES, PERIODS
-from kenzory.extensions import db, login_manager, migrate
+from kenzory.extensions import db, login_manager, mail, migrate
 from kenzory.services.places import place_image, story_image
 from kenzory.services.security import get_csrf_token, protect_csrf
 
@@ -29,6 +29,7 @@ def create_app(config_name=None, db_uri=None):
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
+    mail.init_app(app)
 
     _register_blueprints(app)
     _register_template_helpers(app)
@@ -48,6 +49,7 @@ def _register_blueprints(app):
     from kenzory.routes.errors import errors_bp
     from kenzory.routes.explore import explore_bp
     from kenzory.routes.main import main_bp
+    from kenzory.routes.notifications import notifications_bp
     from kenzory.routes.places import places_bp
     from kenzory.routes.profile import profile_bp
     from kenzory.routes.reviews import reviews_bp
@@ -60,6 +62,7 @@ def _register_blueprints(app):
     app.register_blueprint(profile_bp)
     app.register_blueprint(reviews_bp)
     app.register_blueprint(admin_bp)
+    app.register_blueprint(notifications_bp)
     app.register_blueprint(errors_bp)
 
 
