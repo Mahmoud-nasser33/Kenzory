@@ -20,9 +20,9 @@ from kenzory.services.reviews import recompute_all_ratings
 DEV_PASSWORD = os.getenv("KENZORY_SEED_PASSWORD", "Kenzory123!")
 ADMIN_PASSWORD = os.getenv("KENZORY_ADMIN_PASSWORD", "Admin123!")
 
-# Curated subset for the demo build: only these places/stories are seeded.
-# Each selected place has a real photograph in static/img, and galleries are
-# kept to a single image so no fabricated covers are shown.
+# Curated content for the demo build: the full verified heritage catalogue.
+# Every place has real coordinates, sources and editorial detail. Records with
+# a real photograph in static/img show it; the rest use a generated cover.
 CURATED_PLACES = {
     "deir-al-qusayr",
     "mosque-al-hamawi",
@@ -30,14 +30,40 @@ CURATED_PLACES = {
     "satis-palace",
     "station-deir-sharaf",
     "temple-of-nefertari",
+    "beni-hasan",
+    "speos-artemidos",
+    "tuna-el-gebel",
+    "deir-el-medina",
+    "madinet-madi",
+    "qasr-el-sagha",
     "meidum",
+    "deir-el-muharraq",
+    "wadi-natrun",
+    "al-qasr-dakhla",
+    "hibis-temple",
+    "kom-el-shoqafa",
+    "pompeys-pillar",
+    "gayer-anderson",
+    "sultan-hassan",
+    "shali-siwa",
+    "gebel-el-silsila",
+    "el-kab",
+    "bab-zuweila",
+    "khayamiya-street",
+    "fishawy-cafe",
+    "white-desert",
 }
 
 CURATED_STORIES = {
     "mosque-village-forgot",
+    "tentmakers-needle",
+    "salt-city",
+    "door-without-a-room",
+    "saving-the-sand-ship",
     "second-life-village",
     "incorrupt-bishop",
     "ghost-station-clock",
+    "needle-mirrors-fishawy",
 }
 
 

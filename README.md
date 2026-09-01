@@ -38,8 +38,10 @@ What's in the project today:
   system (8 achievement badges), a reputation score with progress bar, and public
   contributor pages at `/contributor/<username>`. Place cards and detail pages link
   to the contributor who documented them.
-- **Seed content** — a curated set of 7 real heritage places (each with a genuine
-  photograph), 4 stories, community reviews, plus categories and development users.
+- **Seed content** — a curated catalogue of 28 heritage places across 13
+  governorates and all 8 categories (7 with real photographs, the rest with
+  generated covers), 9 linked stories, community reviews, plus categories and
+  development users.
 
 ### Tech stack
 
