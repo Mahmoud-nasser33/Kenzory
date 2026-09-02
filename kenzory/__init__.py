@@ -44,6 +44,7 @@ def create_app(config_name=None, db_uri=None):
 
 def _register_blueprints(app):
     from kenzory.routes.admin import admin_bp
+    from kenzory.routes.api import api_bp
     from kenzory.routes.auth import auth_bp
     from kenzory.routes.contributions import contributions_bp
     from kenzory.routes.errors import errors_bp
@@ -63,6 +64,7 @@ def _register_blueprints(app):
     app.register_blueprint(reviews_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(notifications_bp)
+    app.register_blueprint(api_bp)
     app.register_blueprint(errors_bp)
 
 

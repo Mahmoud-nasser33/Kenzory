@@ -1,6 +1,7 @@
-/* Kenzory shared UI helpers — cards, toasts, saved places, icons. */
+/* Kenzory shared UI helpers — cards, toasts, saved places, icons, dark mode. */
 
 const SAVED_KEY = "kenzory:saved";
+const THEME_KEY = "kenzory:theme";
 
 const CATEGORY_TONES = {
   "Historical Sites": "cat-historical",
@@ -244,13 +245,66 @@ function emptyState({ icon = "compass", title, body, action, href, label }) {
   </div>`;
 }
 
+/* ---------- theme ---------- */
+
+function getPreferredTheme() {
+  const stored = localStorage.getItem(THEME_KEY);
+  if (stored === "dark" || stored === "light") return stored;
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  localStorage.setItem(THEME_KEY, theme);
+  const toggle = document.getElementById("theme-toggle");
+  const drawerLabel = document.getElementById("drawer-theme-label");
+  if (toggle) {
+    const icon = toggle.querySelector("[data-lucide]");
+    if (icon) {
+      icon.setAttribute("data-lucide", theme === "dark" ? "sun" : "moon");
+      refreshIcons();
+    }
+  }
+  if (drawerLabel) {
+    drawerLabel.textContent = theme === "dark" ? "Light mode" : "Dark mode";
+  }
+  const drawerIcon = document.getElementById("drawer-theme-toggle");
+  if (drawerIcon) {
+    const dIcon = drawerIcon.querySelector("[data-lucide]");
+    if (dIcon) {
+      dIcon.setAttribute("data-lucide", theme === "dark" ? "sun" : "moon");
+      refreshIcons();
+    }
+  }
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute("data-theme");
+  applyTheme(current === "dark" ? "light" : "dark");
+}
+
+applyTheme(getPreferredTheme());
+
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+  if (!localStorage.getItem(THEME_KEY)) {
+    applyTheme(e.matches ? "dark" : "light");
+  }
+});
+
 /* ---------- boot ---------- */
 
 document.addEventListener("DOMContentLoaded", () => {
   syncSaveButtons();
   updateSavedDot();
   refreshIcons();
+  applyTheme(getPreferredTheme());
   window.addEventListener("kenzory:saved-changed", updateSavedDot);
+
+  /* theme toggle */
+  const themeToggle = document.getElementById("theme-toggle");
+  if (themeToggle) themeToggle.addEventListener("click", toggleTheme);
+  const drawerThemeToggle = document.getElementById("drawer-theme-toggle");
+  if (drawerThemeToggle) drawerThemeToggle.addEventListener("click", toggleTheme);
 
   /* newsletter demo */
   window.__kenzoryNewsletter = () =>

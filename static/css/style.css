@@ -37,6 +37,172 @@
   --font-body: "Segoe UI", "Tahoma", "Noto Sans", system-ui, -apple-system, sans-serif;
 }
 
+[data-theme="dark"] {
+  --bg: oklch(0.155 0.015 60);
+  --bg-2: oklch(0.185 0.018 60);
+  --surface: oklch(0.21 0.02 60);
+  --ink: oklch(0.93 0.01 80);
+  --ink-soft: oklch(0.78 0.015 75);
+  --muted: oklch(0.60 0.018 70);
+  --faint: oklch(0.48 0.018 70);
+  --line: oklch(0.30 0.02 60);
+  --primary: oklch(0.72 0.06 70);
+  --primary-hover: oklch(0.78 0.07 70);
+  --primary-foreground: oklch(0.15 0.02 60);
+  --accent: oklch(0.62 0.15 38);
+  --accent-deep: oklch(0.70 0.16 40);
+  --accent-foreground: oklch(0.98 0.01 85);
+  --gold: oklch(0.82 0.11 80);
+  --gold-foreground: oklch(0.25 0.05 70);
+  --danger: oklch(0.65 0.20 25);
+  --verified: oklch(0.62 0.13 155);
+  --review: oklch(0.75 0.12 65);
+  --nile: oklch(0.58 0.10 220);
+  --olive: oklch(0.55 0.08 115);
+  --community: oklch(0.60 0.12 290);
+
+  --shadow-soft: 0 1px 2px oklch(0.05 0.01 60 / 0.3), 0 6px 24px -8px oklch(0.05 0.01 60 / 0.5);
+  --shadow-lift: 0 10px 32px -10px oklch(0.05 0.01 60 / 0.6);
+  --shadow-glow: 0 0 0 1px oklch(0.05 0.01 60 / 0.2), 0 24px 64px -20px oklch(0.05 0.01 60 / 0.7);
+}
+
+[data-theme="dark"] body {
+  background-image: radial-gradient(oklch(0.4 0.03 80 / 0.06) 1px, transparent 1px);
+}
+
+[data-theme="dark"] .category-badge,
+[data-theme="dark"] .verified-badge,
+[data-theme="dark"] .pending-badge,
+[data-theme="dark"] .rating-badge {
+  filter: brightness(0.85);
+}
+
+[data-theme="dark"] .cat-tile {
+  background: color-mix(in oklab, var(--cat, var(--accent)) 18%, var(--surface));
+  border-color: color-mix(in oklab, var(--cat, var(--accent)) 25%, transparent);
+}
+
+[data-theme="dark"] .empty-icon {
+  background: color-mix(in oklab, var(--accent) 18%, var(--surface));
+}
+
+[data-theme="dark"] .skeleton {
+  background: color-mix(in oklab, var(--ink) 10%, var(--surface));
+}
+
+[data-theme="dark"] .skeleton::after {
+  background: linear-gradient(90deg, transparent, oklch(1 0 0 / 0.08), transparent);
+}
+
+[data-theme="dark"] .save-btn {
+  background: oklch(0.21 0.02 60 / 0.9);
+}
+
+[data-theme="dark"] .save-btn-light {
+  background: color-mix(in oklab, var(--accent) 12%, var(--surface));
+}
+
+[data-theme="dark"] .badge-icon {
+  background: color-mix(in oklab, var(--gold) 18%, var(--surface));
+}
+
+[data-theme="dark"] .badge-icon.locked {
+  background: var(--bg-2);
+}
+
+[data-theme="dark"] .notif-dropdown-item.unread {
+  background: oklch(0.22 0.02 40);
+}
+
+[data-theme="dark"] .notif-item.notif-unread {
+  background: oklch(0.22 0.02 40);
+  border-color: oklch(0.32 0.03 40);
+}
+
+[data-theme="dark"] .review-note {
+  background: color-mix(in oklab, var(--review) 12%, var(--surface));
+}
+
+[data-theme="dark"] .article-body blockquote {
+  background: color-mix(in oklab, var(--accent) 10%, var(--surface));
+}
+
+[data-theme="dark"] .site-header {
+  background: color-mix(in oklab, var(--bg) 85%, transparent);
+}
+
+[data-theme="dark"] .mobile-nav {
+  background: color-mix(in oklab, var(--surface) 95%, transparent);
+}
+
+[data-theme="dark"] .marker-cluster-small,
+[data-theme="dark"] .marker-cluster-medium,
+[data-theme="dark"] .marker-cluster-large {
+  background-color: color-mix(in oklab, var(--accent) 70%, black) !important;
+}
+
+[data-theme="dark"] .marker-cluster-small div,
+[data-theme="dark"] .marker-cluster-medium div,
+[data-theme="dark"] .marker-cluster-large div {
+  background-color: color-mix(in oklab, var(--accent) 80%, black) !important;
+  color: #fff !important;
+}
+
+[data-theme="dark"] .leaflet-popup-content-wrapper {
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: 14px;
+  box-shadow: var(--shadow-lift);
+}
+
+[data-theme="dark"] .leaflet-popup-tip {
+  background: var(--surface);
+}
+
+[data-theme="dark"] .leaflet-control-zoom a {
+  background: var(--surface) !important;
+  color: var(--ink) !important;
+  border-color: var(--line) !important;
+}
+
+[data-theme="dark"] .map-nearest {
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+[data-theme="dark"] .map-legend {
+  background: var(--surface);
+}
+
+[data-theme="dark"] .map-offline-banner {
+  background: oklch(0.25 0.02 60);
+  color: var(--ink);
+}
+
+[data-theme="dark"] .hero {
+  background: oklch(0.20 0.025 60);
+}
+
+[data-theme="dark"] .site-footer {
+  background: oklch(0.12 0.015 60);
+}
+
+[data-theme="dark"] .page-head {
+  background: oklch(0.20 0.025 60);
+}
+
+[data-theme="dark"] .profile-hero {
+  background: oklch(0.20 0.025 60);
+}
+
+[data-theme="dark"] .add-place-hero {
+  background: oklch(0.20 0.025 60);
+}
+
+[data-theme="dark"] .cta-card {
+  background: oklch(0.20 0.025 60);
+}
+
 *,
 *::before,
 *::after {
