@@ -38,6 +38,16 @@ What's in the project today:
   system (8 achievement badges), a reputation score with progress bar, and public
   contributor pages at `/contributor/<username>`. Place cards and detail pages link
   to the contributor who documented them.
+- **Dark mode** — a one-click moon/sun toggle in the header (and a mobile drawer
+  option) switches the whole interface between light and dark. Your choice is saved
+  in `localStorage`; when no preference is set it follows your system theme, and the
+  Leaflet map, cards, badges, and notifications are all themed to match.
+- **REST API** — a public, read-only JSON API under `/api` exposing places, stories,
+  categories, and platform stats with query-filtering and pagination. Ideal for
+  building mobile apps or embedding heritage data elsewhere.
+- **Radius search** — find heritage places near you. `GET /api/nearby` takes a
+  latitude/longitude and a radius (km) and returns the places within it, sorted by
+  distance using the Haversine formula.
 - **Seed content** — a curated catalogue of 28 heritage places across 13
   governorates and all 8 categories (7 with real photographs, the rest with
   generated covers), 9 linked stories, community reviews, plus categories and
@@ -48,13 +58,33 @@ What's in the project today:
 - Python 3.8+, Flask 3.0
 - SQLAlchemy 2.0 + Flask-SQLAlchemy (SQLite in development, PostgreSQL-ready)
 - Flask-Migrate for schema migrations, Flask-Login for sessions, Flask-Mail for emails
-- Pillow for image validation, pytest for the test suite (108 passing)
+- Pillow for image validation, pytest for the test suite (125 passing)
 
 ## Features
 
 - **In-app notifications** — bell icon with unread badge, dropdown preview, paginated notifications page, mark-as-read.
 - **Email delivery** — optional SMTP emails via Flask-Mail (suppressed by default in dev; set `MAIL_SUPPRESS_SEND=false` to enable).
 - **Notification triggers** — submission approved/rejected, new review, new endorsement.
+
+## API
+
+Public JSON endpoints (all GET, no auth required):
+
+| Endpoint | Description |
+| --- | --- |
+| `GET /api/places` | List places with search & filters (`q`, `category`, `governorate`, `period`, `sort`, `featured`, `verified`) and pagination (`page`, `per_page`) |
+| `GET /api/places/<slug>` | One place by slug or numeric id, including gallery, key facts, timeline & sources |
+| `GET /api/stories` | List stories, optionally filtered by `category` / `governorate` / `q` |
+| `GET /api/stories/<slug>` | One story by slug or numeric id |
+| `GET /api/categories` | All categories with live place counts |
+| `GET /api/nearby` | Places within a radius: `lat`, `lng`, `radius` (km, 1–500) |
+| `GET /api/stats` | Platform totals (places, stories, users, categories, governorates) |
+
+Example:
+
+```
+GET /api/nearby?lat=30.0444&lng=31.2357&radius=50&sort=distance
+```
 
 ## Next phases
 
@@ -63,3 +93,5 @@ Planned features and edits for the upcoming iterations:
 - **More curated content** — replace remaining demo data with verified heritage places,
   each documented with real photos, coordinates, and sources.
 - **Arabic support** — a full Arabic interface and Arabic search.
+- **Heritage trails** — user-curated walking routes linking multiple places.
+- **User password reset** — an email-based flow for recovering accounts.
