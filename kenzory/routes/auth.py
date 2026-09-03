@@ -1,16 +1,27 @@
-"""Authentication routes: register, login, logout."""
+"""Authentication routes: register, login, logout, password reset."""
 
+import logging
 import re
 from urllib.parse import urljoin, urlparse
 
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask import (
+    Blueprint,
+    flash,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
 from flask_login import current_user, login_user, logout_user
+from flask_mail import Message
 
-from kenzory.extensions import db
+from kenzory.extensions import db, mail
 from kenzory.models import User
 
 USERNAME_RE = re.compile(r"^[A-Za-z0-9_]{3,20}$")
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+
+log = logging.getLogger(__name__)
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -125,3 +136,84 @@ def logout():
     logout_user()
     flash("You have been signed out.", "info")
     return redirect(url_for("main.index"))
+
+
+# ---------------------------------------------------------------------------
+# Password reset
+# ---------------------------------------------------------------------------
+
+
+@auth_bp.route("/forgot-password", methods=["GET", "POST"])
+def forgot_password():
+    if current_user.is_authenticated:
+        return redirect(url_for("main.index"))
+
+    if request.method == "POST":
+        email = request.form.get("email", "").strip().lower()
+        user = User.query.filter_by(email=email).first()
+        if user:
+            token = user.generate_reset_token()
+            db.session.commit()
+            _send_reset_email(user, token)
+        flash(
+            "If an account with that email exists, a reset link has been sent.",
+            "info",
+        )
+        return redirect(url_for("auth.login"))
+
+    return render_template("auth/forgot_password.html")
+
+
+@auth_bp.route("/reset-password/<token>", methods=["GET", "POST"])
+def reset_password(token):
+    if current_user.is_authenticated:
+        return redirect(url_for("main.index"))
+
+    user = User.query.filter_by(reset_token=token).first()
+    if user is None or not user.validate_reset_token(token):
+        flash("This reset link is invalid or has expired.", "error")
+        return redirect(url_for("auth.forgot_password"))
+
+    errors = {}
+    if request.method == "POST":
+        password = request.form.get("password", "")
+        password_confirm = request.form.get("password_confirm", "")
+
+        if len(password) < 8:
+            errors["password"] = "Password must be at least 8 characters long."
+        elif password != password_confirm:
+            errors["password_confirm"] = "Passwords do not match."
+
+        if not errors:
+            user.set_password(password)
+            user.clear_reset_token()
+            db.session.commit()
+            flash("Your password has been reset. You can now sign in.", "success")
+            return redirect(url_for("auth.login"))
+
+    return render_template("auth/reset_password.html", token=token, errors=errors)
+
+
+def _send_reset_email(user, token):
+    """Send the password-reset email. Best-effort, never raises."""
+    try:
+        from flask import current_app
+
+        if current_app.config.get("MAIL_SUPPRESS_SEND"):
+            return
+        reset_url = url_for("auth.reset_password", token=token, _external=True)
+        msg = Message(
+            subject="Reset your Kenzory password",
+            recipients=[user.email],
+        )
+        msg.html = render_template(
+            "emails/password_reset.html", user=user, reset_url=reset_url
+        )
+        msg.body = (
+            f"Hi {user.display},\n\n"
+            f"Click the link below to reset your password:\n{reset_url}\n\n"
+            f"If you didn't request this, you can ignore this email."
+        )
+        mail.send(msg)
+    except Exception:
+        log.exception("Failed to send password-reset email to user %s", user.id)

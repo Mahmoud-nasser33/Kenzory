@@ -1,6 +1,7 @@
 """User model."""
 
-from datetime import datetime
+import secrets
+from datetime import datetime, timedelta
 
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -25,6 +26,9 @@ class User(UserMixin, db.Model):
     level = db.Column(db.String(40), nullable=False, default="Contributor")
     role = db.Column(db.String(20), nullable=False, default=ROLE_USER)
 
+    reset_token = db.Column(db.String(64), nullable=True, index=True)
+    reset_token_expiry = db.Column(db.DateTime, nullable=True)
+
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_at = db.Column(
         db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow
@@ -48,6 +52,25 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def generate_reset_token(self, expires_in=3600):
+        """Generate a secure reset token valid for *expires_in* seconds (default 1 h)."""
+        self.reset_token = secrets.token_urlsafe(48)
+        self.reset_token_expiry = datetime.utcnow() + timedelta(seconds=expires_in)
+        return self.reset_token
+
+    def validate_reset_token(self, token):
+        """Return True if *token* matches and has not expired."""
+        if not self.reset_token or not self.reset_token_expiry:
+            return False
+        if datetime.utcnow() > self.reset_token_expiry:
+            self.clear_reset_token()
+            return False
+        return secrets.compare_digest(self.reset_token, token)
+
+    def clear_reset_token(self):
+        self.reset_token = None
+        self.reset_token_expiry = None
 
     @property
     def is_admin(self):
