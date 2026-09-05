@@ -11,9 +11,10 @@ from flask import Blueprint, jsonify, request
 from sqlalchemy import func, select
 
 from kenzory.extensions import db
-from kenzory.models import Category, HeritagePlace, Story, User
+from kenzory.models import Category, HeritagePlace, Story, Trail, User
 from kenzory.services.places import gallery_items, place_image, story_image
 from kenzory.services.search import query_places, radius_search
+from kenzory.services.trails import trail_image
 
 
 api_bp = Blueprint("api", __name__, url_prefix="/api")
@@ -50,7 +51,6 @@ def _place_to_dict(place):
         "id": place.id,
         "slug": place.slug,
         "title": place.title,
-        "title_ar": place.title_ar or "",
         "summary": place.summary,
         "description": place.description,
         "historical_background": place.historical_background or "",
@@ -115,6 +115,48 @@ def _category_to_dict(cat, place_count=0):
         "tone": cat.tone,
         "place_count": place_count,
     }
+
+
+def _trail_stop_to_dict(stop):
+    place = stop.place
+    return {
+        "order": stop.position,
+        "place": {
+            "id": place.id,
+            "slug": place.slug,
+            "title": place.title,
+            "summary": place.summary,
+            "governorate": place.governorate,
+            "location": place.location,
+            "latitude": place.latitude,
+            "longitude": place.longitude,
+            "category": place.category.name if place.category else "",
+            "image": place_image(place),
+            "visit_minutes": place.visit_minutes or 60,
+        },
+    }
+
+
+def _trail_to_dict(trail, with_stops=False):
+    data = {
+        "id": trail.id,
+        "slug": trail.slug,
+        "title": trail.title,
+        "summary": trail.summary,
+        "description": trail.description,
+        "image": trail_image(trail),
+        "stop_count": trail.stop_count,
+        "total_minutes": trail.total_minutes,
+        "creator": {
+            "username": trail.creator.username,
+            "display": trail.creator.display,
+        } if trail.creator else None,
+        "created_at": trail.created_at.isoformat() if trail.created_at else None,
+        "updated_at": trail.updated_at.isoformat() if trail.updated_at else None,
+    }
+    if with_stops:
+        data["stops"] = [_trail_stop_to_dict(stop) for stop in trail.stops]
+    return data
 
 
 # ── Places ──────────────────────────────────────────────────────────
@@ -208,7 +250,43 @@ def get_story(slug):
     return jsonify(_story_to_dict(story))
 
 
+# ── Trails ──────────────────────────────────────────────────────────
+
+@api_bp.route("/trails")
+def list_trails():
+    """List trails with optional search and pagination."""
+    q = (request.args.get("q") or "").strip()
+    page, per_page = _paginate_args()
+
+    query = select(Trail).order_by(Trail.created_at.desc())
+    if q:
+        terms = [t for t in q.split() if t.strip()]
+        if terms:
+            from sqlalchemy import or_
+
+            like = lambda col: [col.ilike(f"%{t}%") for t in terms]
+            query = query.where(
+                or_(*like(Trail.title), *like(Trail.summary), *like(Trail.description))
+            )
+
+    pagination = db.paginate(query, page=page, per_page=per_page, error_out=False)
+    return jsonify({
+        "trails": [_trail_to_dict(t) for t in pagination.items],
+        "pagination": _pagination_meta(pagination),
+    })
+
+
+@api_bp.route("/trails/<slug>")
+def get_trail(slug):
+    """Get a single trail (by slug or numeric id) with its stops."""
+    trail = Trail.query.filter(db.or_(Trail.slug == slug, Trail.id == slug)).first()
+    if not trail:
+        return jsonify({"error": "Trail not found"}), 404
+    return jsonify(_trail_to_dict(trail, with_stops=True))
+
+
 # ── Categories ──────────────────────────────────────────────────────
+
 
 @api_bp.route("/categories")
 def list_categories():

@@ -14,7 +14,6 @@
         {% if submission.votes %}<span class="badge"><i data-lucide="thumbs-up" class="icon-sm"></i> {{ submission.votes|length }} endorsement{{ 's' if submission.votes|length != 1 }}</span>{% endif %}
       </div>
       <h1 style="font-family:var(--font-display);font-size:clamp(1.7rem,3vw,2.4rem)">{{ submission.title }}</h1>
-      {% if submission.title_ar %}<div class="ar">{{ submission.title_ar }}</div>{% endif %}
       <p class="profile-meta">
         Submitted by <b>{{ submission.submitter.display if submission.submitter else '—' }}</b>
         · {{ submission.created_at|timeago }}

@@ -8,7 +8,6 @@
   </div>
   <div class="place-card-body">
     <h3 class="place-card-title"><a href="/place/{{ place.slug }}">{{ place.title }}</a></h3>
-    {% if place.title_ar %}<p class="place-card-ar">{{ place.title_ar }}</p>{% endif %}
     <p class="place-card-summary">{{ place.summary }}</p>
     <div class="place-card-meta">
       {{ rating(place) }}

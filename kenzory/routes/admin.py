@@ -4,7 +4,7 @@ from flask import Blueprint, current_app, flash, redirect, render_template, requ
 
 from kenzory.auth import admin_required
 from kenzory.extensions import db
-from kenzory.models import Category, HeritagePlace, Submission, User
+from kenzory.models import Category, HeritagePlace, Submission, Trail, User
 from kenzory.services.moderation import approve_submission, reject_submission
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
@@ -46,6 +46,7 @@ def dashboard():
         "rejected": status_count.get("rejected", 0),
         "users": db.session.query(db.func.count(User.id)).scalar() or 0,
         "categories": db.session.query(db.func.count(Category.id)).scalar() or 0,
+        "trails": db.session.query(db.func.count(Trail.id)).scalar() or 0,
     }
     recent_submissions = (
         Submission.query.order_by(Submission.created_at.desc()).limit(8).all()
@@ -147,3 +148,24 @@ def users():
     query = db.select(User).order_by(User.created_at.desc())
     pagination = _pagination(query)
     return render_template("admin/users.html", users=pagination.items, pagination=pagination)
+
+
+@admin_bp.route("/trails")
+def trails():
+    query = db.select(Trail).order_by(Trail.created_at.desc())
+    pagination = _pagination(query)
+    return render_template(
+        "admin/trails.html", trails=pagination.items, pagination=pagination
+    )
+
+
+@admin_bp.route("/trails/<int:trail_id>/delete", methods=["POST"])
+def delete_trail(trail_id):
+    trail = db.session.get(Trail, trail_id)
+    if trail is None:
+        flash("Trail not found.", "error")
+        return redirect(url_for("admin.trails"))
+    db.session.delete(trail)
+    db.session.commit()
+    flash(f"Trail “{trail.title}” deleted.", "info")
+    return redirect(url_for("admin.trails"))

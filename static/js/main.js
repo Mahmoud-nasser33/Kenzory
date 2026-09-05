@@ -173,7 +173,6 @@ function placeCard(p) {
     </div>
     <div class="place-card-body">
       <h3 class="place-card-title"><a href="/place/${esc(p.id)}">${esc(p.name)}</a></h3>
-      <p class="place-card-ar">${esc(p.nameAr)}</p>
       <p class="place-card-summary">${esc(p.summary)}</p>
       <div class="place-card-meta">
         <span class="rating"><span class="stars">${stars(p.rating)}</span><span class="rating-value">${p.rating.toFixed(1)}</span></span>
@@ -196,7 +195,6 @@ function placeRow(p) {
         <h3 class="place-card-title"><a href="/place/${esc(p.id)}">${esc(p.name)}</a></h3>
         <span>${saveButton(p.id, p.name)}</span>
       </div>
-      <p class="place-card-ar">${esc(p.nameAr)}</p>
       <div class="row-badges">${categoryBadge(p.category)}${p.verified ? '<span class="badge verified-badge"><i data-lucide="shield-check" class="icon-sm"></i> Verified</span>' : ""}</div>
       <p class="place-card-summary">${esc(p.summary)}</p>
       <div class="place-card-meta">

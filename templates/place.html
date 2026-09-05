@@ -13,7 +13,6 @@
       {{ verified_badge(place) }}
     </div>
     <h1>{{ place.title }}</h1>
-    {% if place.title_ar %}<div class="ar">{{ place.title_ar }}</div>{% endif %}
     <div class="place-hero-meta">
       <span style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="map-pin" class="icon"></i>{{ place.location }}, {{ place.governorate }}</span>
       {% if place.approx_date %}<span style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="calendar" class="icon"></i>{{ place.approx_date }}</span>{% endif %}

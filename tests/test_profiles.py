@@ -78,6 +78,7 @@ class TestGetProfileData:
                 "user", "places", "submissions", "counts",
                 "reputation", "reputation_parts", "level", "badges",
                 "photos", "place_count", "review_count", "endorsement_count",
+                "trails", "trail_count",
             }
             assert expected_keys == set(data.keys())
 

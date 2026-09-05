@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% from "macros.html" import empty_state with context %}
+{% block title %}Heritage trails — Kenzory{% endblock %}
+
+{% block content %}
+<section class="container section" style="padding-bottom:80px">
+  <div class="section-head">
+    <div>
+      <div class="eyebrow">Heritage trails</div>
+      <h1 style="font-family:var(--font-display);font-size:clamp(1.9rem,3.4vw,2.8rem);margin-top:8px">Walk the places, in order</h1>
+      <p class="section-sub">Community-curated walking routes that string Kenzory's discoveries into a full day out — follow the sequence, and let the stops tell the story.</p>
+    </div>
+    <a class="btn btn-accent btn-sm" href="/trails/new"><i data-lucide="plus" class="icon-sm"></i> Create a trail</a>
+  </div>
+
+  <form method="get" action="/trails" class="search-bar" style="max-width:560px;margin-bottom:24px">
+    <i data-lucide="search" class="icon"></i>
+    <input type="text" name="q" value="{{ q }}" placeholder="Search trails by name or route…" aria-label="Search trails">
+    <button type="submit">Search</button>
+  </form>
+
+  {% if trails %}
+  <p class="results-count" style="margin-bottom:18px"><b>{{ trails|length }}</b> trail{{ 's' if trails|length != 1 }}{% if q %} for “{{ q }}”{% endif %}</p>
+  <div class="card-grid">
+    {% for trail in trails %}
+      {% include "partials/_trail_card.html" %}
+    {% endfor %}
+  </div>
+  {% else %}
+    {{ empty_state("route", "No trails yet", "Be the first to string a day of discoveries into a walking route.", "Create a trail", "/trails/new") }}
+  {% endif %}
+</section>
+{% endblock %}

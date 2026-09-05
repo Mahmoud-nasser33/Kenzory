@@ -59,7 +59,6 @@ def _parse_place_form():
     """Read the shared add/edit place fields from the request."""
     return {
         "title": request.form.get("title", "").strip(),
-        "title_ar": request.form.get("title_ar", "").strip(),
         "summary": request.form.get("summary", "").strip(),
         "description": request.form.get("description", "").strip(),
         "historical_information": request.form.get("historical_information", "").strip(),
@@ -129,7 +128,6 @@ def add_place():
         if not errors:
             submission = Submission(
                 title=form["title"],
-                title_ar=form["title_ar"],
                 summary=form["summary"],
                 description=form["description"],
                 historical_information=form["historical_information"],
@@ -249,7 +247,6 @@ def edit_place(slug):
         if not errors:
             form_category_id = category.id
             place.title = form["title"]
-            place.title_ar = form["title_ar"]
             place.summary = form["summary"]
             place.description = form["description"]
             place.historical_background = form["historical_information"] or None
@@ -277,7 +274,6 @@ def edit_place(slug):
     else:
         form = {
             "title": place.title,
-            "title_ar": place.title_ar or "",
             "summary": place.summary,
             "description": place.description or "",
             "historical_information": place.historical_background or "",

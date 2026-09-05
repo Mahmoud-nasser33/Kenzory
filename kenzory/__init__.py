@@ -6,25 +6,34 @@ stays easy to extend in later milestones.
 """
 
 import os
+import time
 
 import click
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
-from kenzory.config import get_config
+from kenzory.config import get_config, validate_production
 from kenzory.constants import GOVERNORATES, PERIODS
 from kenzory.extensions import db, login_manager, mail, migrate
 from kenzory.services.places import place_image, story_image
 from kenzory.services.security import get_csrf_token, protect_csrf
+from kenzory.services.trails import trail_image
 
 TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "templates")
 STATIC_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "static")
 
 
 def create_app(config_name=None, db_uri=None):
+    from kenzory.config import CONFIG_MAP
+
     app = Flask(__name__, template_folder=TEMPLATE_DIR, static_folder=STATIC_DIR)
-    app.config.from_object(get_config(config_name))
+    if config_name is None and os.getenv("KENZORY_ENV") == "production":
+        config_name = "production"
+    config_class = get_config(config_name)
+    app.config.from_object(config_class)
     if db_uri:
         app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
+    if config_class is CONFIG_MAP["production"]:
+        validate_production(app)
 
     db.init_app(app)
     migrate.init_app(app, db)
@@ -38,6 +47,23 @@ def create_app(config_name=None, db_uri=None):
     @app.before_request
     def csrf_protect():
         return protect_csrf()
+
+    @app.after_request
+    def security_headers(response):
+        response.headers.setdefault("X-Content-Type-Options", "nosniff")
+        response.headers.setdefault("X-Frame-Options", "DENY")
+        response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+        if request.endpoint == "static":
+            response.headers.setdefault("Cache-Control", "public, max-age=86400")
+        return response
+
+    @app.get("/healthz")
+    def healthz():
+        try:
+            db.session.execute(db.text("SELECT 1"))
+            return {"status": "ok", "ts": int(time.time())}
+        except Exception:
+            return {"status": "unavailable"}, 503
 
     return app
 
@@ -54,6 +80,7 @@ def _register_blueprints(app):
     from kenzory.routes.places import places_bp
     from kenzory.routes.profile import profile_bp
     from kenzory.routes.reviews import reviews_bp
+    from kenzory.routes.trails import trails_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(explore_bp)
@@ -65,10 +92,13 @@ def _register_blueprints(app):
     app.register_blueprint(admin_bp)
     app.register_blueprint(notifications_bp)
     app.register_blueprint(api_bp)
+    app.register_blueprint(trails_bp)
     app.register_blueprint(errors_bp)
 
 
 def _register_template_helpers(app):
+    from datetime import datetime
+
     from kenzory.models import Category
 
     @app.context_processor
@@ -86,7 +116,8 @@ def _register_template_helpers(app):
             "csrf_token": get_csrf_token,
             "place_image": place_image,
             "story_image": story_image,
-            "current_year": "2026",
+            "trail_image": trail_image,
+            "current_year": str(datetime.utcnow().year),
         }
 
     @app.template_filter("stars")

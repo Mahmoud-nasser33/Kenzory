@@ -14,6 +14,7 @@
       <div class="profile-stats">
         <div class="stat"><b>{{ place_count }}</b><span>places</span></div>
         <div class="stat"><b>{{ review_count }}</b><span>reviews</span></div>
+        <div class="stat"><b>{{ trail_count }}</b><span>trails</span></div>
         <div class="stat"><b>{{ photos }}</b><span>photos</span></div>
         <div class="stat"><b>{{ reputation }}</b><span>points</span></div>
       </div>
@@ -93,6 +94,18 @@
       </div>
       {% else %}
         {{ empty_state("map-pin", "No heritage places yet", "This contributor hasn't had any places approved yet.") }}
+      {% endif %}
+
+      {% if trails %}
+      <div class="section-head" style="margin-top:56px">
+        <div>
+          <div class="eyebrow">Routes</div>
+          <h2 class="section-title">Trails by {{ user.display }}</h2>
+        </div>
+      </div>
+      <div class="card-grid">
+        {% for trail in trails %}{% include "partials/_trail_card.html" %}{% endfor %}
+      </div>
       {% endif %}
     </div>
   </div>

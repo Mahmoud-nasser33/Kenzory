@@ -13,9 +13,10 @@ from flask import current_app
 
 from kenzory import seed_data
 from kenzory.extensions import db
-from kenzory.models import Category, HeritagePlace, Review, Story, User
+from kenzory.models import Category, HeritagePlace, Review, Story, Trail, TrailStop, User
 from kenzory.services.covers import ensure_cover
 from kenzory.services.reviews import recompute_all_ratings
+from kenzory.services.trails import unique_trail_slug
 
 DEV_PASSWORD = os.getenv("KENZORY_SEED_PASSWORD", "Kenzory123!")
 ADMIN_PASSWORD = os.getenv("KENZORY_ADMIN_PASSWORD", "Admin123!")
@@ -71,14 +72,14 @@ def _has_content():
     return db.session.query(Category.id).first() is not None
 
 
-def _resolve_image(key, slug, category, name_ar, name_en, city):
+def _resolve_image(key, slug, category, name_en, city):
     """Map a prototype image key to a static path (photo or generated cover)."""
     base = current_app.static_folder
     if key:
         jpg = os.path.join(base, "img", f"{key}.jpg")
         if os.path.isfile(jpg):
             return f"img/{key}.jpg"
-    return ensure_cover(slug, category, name_ar, name_en, city)
+    return ensure_cover(slug, category, name_en, city)
 
 
 def seed_users():
@@ -169,7 +170,6 @@ def seed_places(categories, users):
             raw.get("image"),
             slug,
             raw["category"],
-            raw.get("nameAr", ""),
             name_en,
             raw.get("city", ""),
         )
@@ -181,7 +181,6 @@ def seed_places(categories, users):
         place = HeritagePlace(
             slug=slug,
             title=raw["name"],
-            title_ar=raw.get("nameAr", ""),
             summary=raw["summary"],
             description=raw["description"],
             historical_background=raw["description"],
@@ -219,6 +218,90 @@ def seed_places(categories, users):
     return places
 
 
+def seed_trails(places, users):
+    """Seed a handful of curated example walking routes."""
+    by_slug = {p.slug: p for p in places}
+
+    curated = [
+        {
+            "slug": "morning-in-old-cairo's-gates",
+            "title": "Morning in Old Cairo's Gates",
+            "summary": (
+                "Walk from the last surviving gate of medieval Cairo through the "
+                "tentmakers' street to the coffeehouse where the quarter still gathers — "
+                "a Mamluk-history morning under 45 minutes of easy strolling."
+            ),
+            "description": (
+                "Start at Bab Zuweila, the last standing gate of the Fatimid city wall, "
+                "where the minarets of Muayyad frame a view over the whole district. Ten "
+                "minutes south lies the covered Khayyamiya street, where the tentmakers "
+                "still stitch their appliqué panels by hand — the perfect place to pause "
+                "and watch. Finish where the quarter winds down: El-Fishawy in the "
+                "Hussein district, a caffeine-fueled landmark that has been mixing poetry "
+                "and gossip since 1773."
+            ),
+            "creator": "mostafa",
+            "stops": ["bab-zuweila", "khayamiya-street", "fishawy-cafe"],
+        },
+        {
+            "slug": "the-sacred-desert-edge",
+            "title": "The Sacred Desert Edge",
+            "summary": (
+                "A looping tour of Minya's borderlands, where monasteries and necropolises "
+                "face each other across the desert escarpment — a full day, comfortably "
+                "split in two by lunch in Tuna El-Gebel."
+            ),
+            "description": (
+                "Begin at Deir Al-Qusayr, the last fully surviving medieval desert "
+                "monastery, tucked against the escarpment with its incorrupt guardian "
+                "still under the arch. Drive ten minutes to Tuna El-Gebel, a sprawling "
+                "Greco-Roman necropolis where the ibis cemeteries meet the tombs of the "
+                "rich. Finish across the wadi at Beni Hasan, whose Middle Kingdom rock-cut "
+                "tombs hold some of Egypt's most vivid painted hunting scenes."
+            ),
+            "creator": "mariam",
+            "stops": ["deir-al-qusayr", "tuna-el-gebel", "beni-hasan"],
+        },
+        {
+            "slug": "gates-of-the-west",
+            "title": "Gates of the West",
+            "summary": (
+                "Three of Egypt's strangest desert landmarks on the western edge: a "
+                "salt-crystal fortress town, an unfinished temple that refuses to explain "
+                "itself, and the labyrinthine mud-brick houses of Al-Qasr."
+            ),
+            "description": (
+                "Start at Qasr El-Sagha, the enigma of the Faiyum — a temple with doors "
+                "that open onto blank chambers and a name that nobody can explain. Then "
+                "follow the desert to the Dakhla Oasis township of Al-Qasr, its honeycomb "
+                "of mud-brick houses layered a thousand years deep. For the bold, the "
+                "route extends west to Siwa's Shali — the salt city dissolved by its own "
+                "rain, now the quietest ruin in Egypt."
+            ),
+            "creator": "khalid",
+            "stops": ["qasr-el-sagha", "al-qasr-dakhla", "shali-siwa"],
+        },
+    ]
+
+    for raw in curated:
+        place_ids = [by_slug[s].id for s in raw["stops"] if s in by_slug]
+        if len(place_ids) < 2:
+            continue
+        creator = users.get(raw["creator"], users["mahmoud"])
+        trail = Trail(
+            slug=unique_trail_slug(raw["slug"]),
+            title=raw["title"],
+            summary=raw["summary"],
+            description=raw["description"],
+            created_by=creator.id,
+        )
+        db.session.add(trail)
+        db.session.flush()
+        for index, place_id in enumerate(place_ids):
+            db.session.add(TrailStop(trail_id=trail.id, place_id=place_id, position=index))
+        trail.image = by_slug[raw["stops"][0]].image if raw["stops"][0] in by_slug else None
+
+
 def seed_stories(places):
     by_title = {}
     for p in places:
@@ -232,7 +315,7 @@ def seed_stories(places):
         slug = raw["id"]
         name_en = raw["title"]
         image = _resolve_image(
-            raw.get("image"), slug, raw.get("category", "Stories & Legends"), "", name_en, ""
+            raw.get("image"), slug, raw.get("category", "Stories & Legends"), name_en, ""
         )
         story = Story(
             slug=slug,
@@ -334,6 +417,7 @@ def run_seed(reset=False):
     categories = seed_categories()
     places = seed_places(categories, users)
     seed_stories(places)
+    seed_trails(places, users)
     seed_reviews(places, users)
     db.session.commit()
     return True

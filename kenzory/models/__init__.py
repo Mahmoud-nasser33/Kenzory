@@ -24,6 +24,7 @@ from kenzory.models.submission import (
     SUBMISSION_STATUSES,
     Submission,
 )
+from kenzory.models.trail import MAX_STOPS, MIN_STOPS, Trail, TrailStop
 from kenzory.models.user import ROLE_ADMIN, ROLE_USER, User
 from kenzory.models.vote import SubmissionVote
 
@@ -44,6 +45,8 @@ __all__ = [
     "MAX_BODY_LENGTH",
     "MAX_RATING",
     "MIN_RATING",
+    "MAX_STOPS",
+    "MIN_STOPS",
     "Category",
     "HeritagePlace",
     "Notification",
@@ -51,5 +54,7 @@ __all__ = [
     "Story",
     "Submission",
     "SubmissionVote",
+    "Trail",
+    "TrailStop",
     "User",
 ]

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Trails — Admin{% endblock %}
+
+{% block content %}
+<div class="page-head admin-head">
+  <div class="container">
+    <div class="eyebrow">Admin</div>
+    <h1 class="page-title">Trails</h1>
+    <p class="page-sub">Community walking routes. Trails publish instantly; remove any that break guidelines.</p>
+  </div>
+</div>
+
+<div class="container section" style="padding-bottom:80px">
+  <div class="admin-nav">
+    <a href="/admin">Dashboard</a>
+    <a href="/admin/submissions">Submissions</a>
+    <a href="/admin/places">Places</a>
+    <a href="/admin/users">Users</a>
+    <a href="/admin/trails" class="active">Trails</a>
+  </div>
+
+  {% if trails %}
+  <div class="surface-card admin-panel">
+    <div class="admin-list">
+      {% for t in trails %}
+      <div class="admin-row">
+        <a class="admin-row-title" href="/trails/{{ t.slug }}" style="text-decoration:none">
+          <img src="{{ trail_image(t) }}" alt="">
+          <span>
+            <b>{{ t.title }}</b>
+            <small>{{ t.stop_count }} stop{{ 's' if t.stop_count != 1 }} · {{ t.creator.display if t.creator else '—' }} · {{ t.created_at|timeago }}</small>
+          </span>
+        </a>
+        <span class="admin-row-meta">
+          <a class="btn btn-outline btn-sm" href="/trails/{{ t.slug }}">View</a>
+          <form method="post" action="/admin/trails/{{ t.id }}/delete" onsubmit="return confirm('Delete this trail?')">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+          </form>
+        </span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  {% if pagination.pages > 1 %}
+  <nav class="pagination" aria-label="Pages">
+    {% if pagination.has_prev %}<a class="page-btn" href="/admin/trails?page={{ pagination.prev_num }}" aria-label="Previous"><i data-lucide="chevron-left" class="icon"></i></a>{% endif %}
+    {% for p in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+      {% if p %}
+        {% if p == pagination.page %}<span class="page-btn active">{{ p }}</span>
+        {% else %}<a class="page-btn" href="/admin/trails?page={{ p }}">{{ p }}</a>{% endif %}
+      {% else %}<span class="page-ellipsis">…</span>{% endif %}
+    {% endfor %}
+    {% if pagination.has_next %}<a class="page-btn" href="/admin/trails?page={{ pagination.next_num }}" aria-label="Next"><i data-lucide="chevron-right" class="icon"></i></a>{% endif %}
+  </nav>
+  {% endif %}
+
+  {% else %}
+  <div class="surface-card admin-panel" style="text-align:center;padding:48px">
+    <p class="admin-empty">No trails yet.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

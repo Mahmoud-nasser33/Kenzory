@@ -22,7 +22,6 @@ class HeritagePlace(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     slug = db.Column(db.String(160), unique=True, nullable=False, index=True)
     title = db.Column(db.String(255), nullable=False, index=True)
-    title_ar = db.Column(db.String(255))
     summary = db.Column(db.Text, nullable=False, default="")
     description = db.Column(db.Text, nullable=False, default="")
     historical_background = db.Column(db.Text)

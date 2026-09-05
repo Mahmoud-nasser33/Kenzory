@@ -2,13 +2,16 @@
 
 Configuration is selected in `create_app()` via the KENZORY_ENV variable
 (development / testing / production) or an explicit config object for tests.
-Secrets and deployment-specific values are read from environment variables.
+Secrets and deployment-specific values are read from environment variables —
+never hardcode production values.
 """
 
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 INSTANCE_DIR = os.path.join(BASE_DIR, "instance")
+
+_DEFAULT_SECRET = "change-me-in-production"
 
 
 def _sqlite_default(name):
@@ -18,7 +21,7 @@ def _sqlite_default(name):
 class Config:
     """Base configuration shared by all environments."""
 
-    SECRET_KEY = os.getenv("SECRET_KEY", "change-me-in-production")
+    SECRET_KEY = os.getenv("SECRET_KEY", _DEFAULT_SECRET)
 
     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -27,6 +30,7 @@ class Config:
     SESSION_COOKIE_SAMESITE = "Lax"
     REMEMBER_COOKIE_HTTPONLY = True
     REMEMBER_COOKIE_DURATION = 60 * 60 * 24 * 30
+    PREFERRED_URL_SCHEME = "http"
 
     # Uploads
     MAX_CONTENT_LENGTH = 20 * 1024 * 1024  # 20 MB total request body
@@ -69,8 +73,9 @@ class ProductionConfig(Config):
     DEBUG = False
     TESTING = False
     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
-    SESSION_COOKIE_SECURE = os.getenv("SESSION_COOKIE_SECURE", "false").lower() == "true"
-    REMEMBER_COOKIE_SECURE = os.getenv("SESSION_COOKIE_SECURE", "false").lower() == "true"
+    PREFERRED_URL_SCHEME = os.getenv("PREFERRED_URL_SCHEME", "https")
+    SESSION_COOKIE_SECURE = os.getenv("SESSION_COOKIE_SECURE", "true").lower() == "true"
+    REMEMBER_COOKIE_SECURE = os.getenv("SESSION_COOKIE_SECURE", "true").lower() == "true"
 
 
 CONFIG_MAP = {
@@ -86,3 +91,21 @@ def get_config(config_name=None):
     if config_name not in CONFIG_MAP:
         raise ValueError(f"Unknown configuration: {config_name!r}")
     return CONFIG_MAP[config_name]
+
+
+def validate_production(app):
+    """Fail fast when production is missing security-critical settings."""
+    problems = []
+    secret = app.config.get("SECRET_KEY")
+    if not secret or secret == _DEFAULT_SECRET:
+        problems.append(
+            "Set the SECRET_KEY environment variable to a long random value "
+            "before starting."
+        )
+    if not app.config.get("SQLALCHEMY_DATABASE_URI"):
+        problems.append(
+            "Set the DATABASE_URL environment variable (e.g. a PostgreSQL "
+            "connection string) before starting."
+        )
+    if problems:
+        raise RuntimeError("Production configuration is incomplete: " + "; ".join(problems))

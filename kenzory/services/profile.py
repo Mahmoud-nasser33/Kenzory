@@ -185,6 +185,14 @@ def get_profile_data(user):
 
     photos = sum(p.photos or 0 for p in approved_places)
 
+    from kenzory.models.trail import Trail
+
+    trails = (
+        Trail.query.filter_by(created_by=user.id)
+        .order_by(Trail.created_at.desc())
+        .all()
+    )
+
     return {
         "user": user,
         "places": approved_places,
@@ -198,4 +206,6 @@ def get_profile_data(user):
         "place_count": len(approved_places),
         "review_count": user.review_count,
         "endorsement_count": user.endorsement_count,
+        "trails": trails,
+        "trail_count": len(trails),
     }

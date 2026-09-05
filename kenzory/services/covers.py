@@ -1,7 +1,7 @@
 """Generated SVG cover images.
 
-Records without a photograph get a tasteful generated cover (Arabic + English
-name on a category-toned background). Covers are generated once and written to
+Records without a photograph get a tasteful generated cover (place name on a
+category-toned background). Covers are generated once and written to
 ``static/img/covers/<slug>.svg``.
 """
 
@@ -27,7 +27,7 @@ _COVER_COLORS = {
 _DEFAULT = _COVER_COLORS["Hidden Gems"]
 
 
-def _svg(category, name_ar, name_en, city):
+def _svg(category, name, city):
     c = _COVER_COLORS.get(category, _DEFAULT)
     return f"""<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
   <defs>
@@ -43,17 +43,16 @@ def _svg(category, name_ar, name_en, city):
   <rect width="1200" height="800" fill="url(#p)"/>
   <path d="M0 640 Q300 540 600 640 T1200 640 V800 H0 Z" fill="#000" opacity="0.18"/>
   <rect x="40" y="40" width="1120" height="720" fill="none" stroke="{c['accent']}" stroke-opacity="0.5" stroke-width="2"/>
-  <text x="600" y="430" text-anchor="middle" font-family="'Alegreya','Amiri',Georgia,serif" font-size="92" fill="{c['fg']}">{_xml_escape(name_ar)}</text>
-  <text x="600" y="520" text-anchor="middle" font-family="Georgia,serif" font-size="38" fill="{c['fg']}" opacity="0.85">{_xml_escape(name_en)}</text>
-  <circle cx="600" cy="575" r="26" fill="none" stroke="{c['accent']}" stroke-width="2"/>
-  <line x1="585" y1="575" x2="615" y2="575" stroke="{c['accent']}" stroke-width="2"/>
-  <line x1="600" y1="560" x2="600" y2="590" stroke="{c['accent']}" stroke-width="2"/>
-  <text x="600" y="650" text-anchor="middle" font-family="Georgia,serif" font-size="26" letter-spacing="4" fill="{c['fg']}" opacity="0.7">{_xml_escape(category.upper())}</text>
-  <text x="600" y="700" text-anchor="middle" font-family="Georgia,serif" font-size="22" fill="{c['fg']}" opacity="0.5">{_xml_escape(city)}</text>
+  <text x="600" y="430" text-anchor="middle" font-family="Georgia,serif" font-size="76" fill="{c['fg']}">{_xml_escape(name)}</text>
+  <circle cx="600" cy="535" r="26" fill="none" stroke="{c['accent']}" stroke-width="2"/>
+  <line x1="585" y1="535" x2="615" y2="535" stroke="{c['accent']}" stroke-width="2"/>
+  <line x1="600" y1="520" x2="600" y2="550" stroke="{c['accent']}" stroke-width="2"/>
+  <text x="600" y="610" text-anchor="middle" font-family="Georgia,serif" font-size="26" letter-spacing="4" fill="{c['fg']}" opacity="0.7">{_xml_escape(category.upper())}</text>
+  <text x="600" y="660" text-anchor="middle" font-family="Georgia,serif" font-size="22" fill="{c['fg']}" opacity="0.5">{_xml_escape(city)}</text>
 </svg>"""
 
 
-def ensure_cover(slug, category, name_ar, name_en, city):
+def ensure_cover(slug, category, name, city):
     """Write a cover SVG for the given record if one does not already exist."""
     slug = slugify(slug) or "place"
     folder = current_app.config["COVER_FOLDER"]
@@ -61,7 +60,7 @@ def ensure_cover(slug, category, name_ar, name_en, city):
     path = os.path.join(folder, f"{slug}.svg")
     if not os.path.exists(path):
         with open(path, "w", encoding="utf-8") as fh:
-            fh.write(_svg(category, name_ar or "", name_en, city))
+            fh.write(_svg(category, name, city))
     return f"img/covers/{slug}.svg"
 
 

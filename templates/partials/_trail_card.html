@@ -1,0 +1,20 @@
+{% from "macros.html" import category_badge with context %}
+<article class="trail-card surface-card">
+  <a class="trail-card-media" href="/trails/{{ trail.slug }}"><img src="{{ trail_image(trail) }}" alt="{{ trail.title }}" loading="lazy" width="640" height="400"></a>
+  <div class="trail-card-body">
+    <div class="row-badges">
+      <span class="badge category-badge cat-hidden"><i data-lucide="route" class="icon-sm"></i> Walking route</span>
+      <span class="badge category-badge cat-natural"><i data-lucide="map-pin" class="icon-sm"></i> {{ trail.stop_count }} stop{{ 's' if trail.stop_count != 1 }}</span>
+    </div>
+    <h3 class="story-card-title"><a href="/trails/{{ trail.slug }}">{{ trail.title }}</a></h3>
+    <p class="story-card-excerpt">{{ trail.summary }}</p>
+    <div class="trail-card-meta">
+      <span class="byline">
+        <span class="byline-avatar">{{ trail.creator.initials if trail.creator else 'KZ' }}</span>
+        {{ trail.creator.display if trail.creator else 'Kenzory' }}
+      </span>
+      <span>· {{ trail.total_minutes }} min</span>
+      <span>· {{ trail.created_at|timeago }}</span>
+    </div>
+  </div>
+</article>

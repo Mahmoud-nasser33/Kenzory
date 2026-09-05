@@ -97,7 +97,6 @@ PLACES = [
     {
         "id": "deir-al-qusayr",
         "name": "Deir Al-Qusayr — The Last Desert Monastery",
-        "nameAr": "دير القصير",
         "category": "Religious Heritage",
         "governorate": "Minya",
         "region": "Northern Upper Egypt",
@@ -150,7 +149,6 @@ PLACES = [
     {
         "id": "mosque-al-hamawi",
         "name": "The 'Hidden' Mosque of Al-Hamawi",
-        "nameAr": "مسجد الحماوي",
         "category": "Religious Heritage",
         "governorate": "Alexandria",
         "region": "Lower Egypt",
@@ -201,7 +199,6 @@ PLACES = [
     {
         "id": "nubian-village",
         "name": "The Living Nubian Village",
-        "nameAr": "قرية النوبة الحية",
         "category": "Traditional Crafts",
         "governorate": "Aswan",
         "region": "Southern Upper Egypt",
@@ -251,7 +248,6 @@ PLACES = [
     {
         "id": "satis-palace",
         "name": "The Abandoned Palace of Satis",
-        "nameAr": "قصر ساتيس المهجور",
         "category": "Architecture",
         "governorate": "Kafr El-Sheikh",
         "region": "Nile Delta",
@@ -301,7 +297,6 @@ PLACES = [
     {
         "id": "station-deir-sharaf",
         "name": "The Abandoned Station of Deir Sharaf",
-        "nameAr": "محطة دير شرف المهجورة",
         "category": "Architecture",
         "governorate": "Minufiya",
         "region": "Nile Delta",
@@ -351,7 +346,6 @@ PLACES = [
     {
         "id": "temple-of-nefertari",
         "name": "The Temple of Nefertari",
-        "nameAr": "معبد نفرتاري",
         "category": "Historical Sites",
         "governorate": "Aswan",
         "region": "Southern Upper Egypt",
@@ -401,7 +395,6 @@ PLACES = [
     {
         "id": "beni-hasan",
         "name": "The Rock-Cut Tombs of Beni Hasan",
-        "nameAr": "مقابر بني حسن",
         "category": "Historical Sites",
         "governorate": "Minya",
         "region": "Northern Upper Egypt",
@@ -451,7 +444,6 @@ PLACES = [
     {
         "id": "speos-artemidos",
         "name": "Speos Artemidos — The Cave of Artemis",
-        "nameAr": "سبوس أرتيميدوس",
         "category": "Hidden Gems",
         "governorate": "Minya",
         "region": "Northern Upper Egypt",
@@ -501,7 +493,6 @@ PLACES = [
     {
         "id": "tuna-el-gebel",
         "name": "Tuna El-Gebel — Gateway of the Necropolis",
-        "nameAr": "تونة الجبل",
         "category": "Historical Sites",
         "governorate": "Minya",
         "region": "Northern Upper Egypt",
@@ -551,7 +542,6 @@ PLACES = [
     {
         "id": "deir-el-medina",
         "name": "Deir El-Medina — The Village of the Artisans",
-        "nameAr": "دير المدينة",
         "category": "Hidden Gems",
         "governorate": "Luxor",
         "region": "Southern Upper Egypt",
@@ -601,7 +591,6 @@ PLACES = [
     {
         "id": "madinet-madi",
         "name": "Madinet Madi — The Lost City of the Goddess",
-        "nameAr": "مدينة ماضي",
         "category": "Hidden Gems",
         "governorate": "Faiyum",
         "region": "Lower Egypt",
@@ -651,7 +640,6 @@ PLACES = [
     {
         "id": "qasr-el-sagha",
         "name": "Qasr El-Sagha — The Desert Temple of Mystery",
-        "nameAr": "قصر الصاغة",
         "category": "Stories & Legends",
         "governorate": "Faiyum",
         "region": "Lower Egypt",
@@ -701,7 +689,6 @@ PLACES = [
     {
         "id": "meidum",
         "name": "The Collapsed Pyramid of Meidum",
-        "nameAr": "هرم ميدوم",
         "category": "Historical Sites",
         "governorate": "Beni Suef",
         "region": "Lower Egypt",
@@ -751,7 +738,6 @@ PLACES = [
     {
         "id": "deir-el-muharraq",
         "name": "Deir El-Muharraq — The First Monastery",
-        "nameAr": "دير المحرق",
         "category": "Religious Heritage",
         "governorate": "Asyut",
         "region": "Upper Egypt",
@@ -801,7 +787,6 @@ PLACES = [
     {
         "id": "wadi-natrun",
         "name": "The Desert Monasteries of Wadi El-Natrun",
-        "nameAr": "أديرة وادي النطرون",
         "category": "Religious Heritage",
         "governorate": "Beheira",
         "region": "Nile Delta fringe",
@@ -851,7 +836,6 @@ PLACES = [
     {
         "id": "al-qasr-dakhla",
         "name": "Al-Qasr — The Clay Village of Dakhla",
-        "nameAr": "القصر الداخلة",
         "category": "Hidden Gems",
         "governorate": "New Valley",
         "region": "Western Desert",
@@ -901,7 +885,6 @@ PLACES = [
     {
         "id": "hibis-temple",
         "name": "The Temple of Hibis in the Great Sand Sea",
-        "nameAr": "معبد هيبس",
         "category": "Historical Sites",
         "governorate": "New Valley",
         "region": "Western Desert",
@@ -951,7 +934,6 @@ PLACES = [
     {
         "id": "kom-el-shoqafa",
         "name": "The Catacombs of Kom El-Shoqafa",
-        "nameAr": "مقابر كوم الشقافة",
         "category": "Historical Sites",
         "governorate": "Alexandria",
         "region": "Lower Egypt",
@@ -1001,7 +983,6 @@ PLACES = [
     {
         "id": "pompeys-pillar",
         "name": "Pompey's Pillar",
-        "nameAr": "عمود السواري",
         "category": "Stories & Legends",
         "governorate": "Alexandria",
         "region": "Lower Egypt",
@@ -1051,7 +1032,6 @@ PLACES = [
     {
         "id": "gayer-anderson",
         "name": "The Gayer-Anderson House",
-        "nameAr": "بيت الكريتلية",
         "category": "Architecture",
         "governorate": "Cairo",
         "region": "Cairo",
@@ -1101,7 +1081,6 @@ PLACES = [
     {
         "id": "sultan-hassan",
         "name": "The Mosque-Madrasa of Sultan Hassan",
-        "nameAr": "مسجد السلطان حسن",
         "category": "Architecture",
         "governorate": "Cairo",
         "region": "Cairo",
@@ -1151,7 +1130,6 @@ PLACES = [
     {
         "id": "shali-siwa",
         "name": "The Shali Fortress of Siwa",
-        "nameAr": "قلعة شالي",
         "category": "Architecture",
         "governorate": "Matrouh",
         "region": "Western Desert",
@@ -1201,7 +1179,6 @@ PLACES = [
     {
         "id": "gebel-el-silsila",
         "name": "The Quarries of Gebel El-Silsila",
-        "nameAr": "جبل السلسلة",
         "category": "Hidden Gems",
         "governorate": "Aswan",
         "region": "Southern Upper Egypt",
@@ -1251,7 +1228,6 @@ PLACES = [
     {
         "id": "el-kab",
         "name": "El-Kab — The Forgotten City of the South",
-        "nameAr": "الكاب",
         "category": "Hidden Gems",
         "governorate": "Aswan",
         "region": "Southern Upper Egypt",
@@ -1301,7 +1277,6 @@ PLACES = [
     {
         "id": "bab-zuweila",
         "name": "Bab Zuweila — The Gate of the Hanged",
-        "nameAr": "باب زويلة",
         "category": "Historical Sites",
         "governorate": "Cairo",
         "region": "Cairo",
@@ -1351,7 +1326,6 @@ PLACES = [
     {
         "id": "khayamiya-street",
         "name": "Street of the Tentmakers",
-        "nameAr": "شارع الخيامية",
         "category": "Traditional Crafts",
         "governorate": "Cairo",
         "region": "Cairo",
@@ -1401,7 +1375,6 @@ PLACES = [
     {
         "id": "fishawy-cafe",
         "name": "El Fishawy — The Mirror of Old Cairo",
-        "nameAr": "الفيشاوي",
         "category": "Food & Culture",
         "governorate": "Cairo",
         "region": "Cairo",
@@ -1451,7 +1424,6 @@ PLACES = [
     {
         "id": "white-desert",
         "name": "The White Desert of Farafra",
-        "nameAr": "الصحراء البيضاء",
         "category": "Natural Heritage",
         "governorate": "New Valley",
         "region": "Western Desert",

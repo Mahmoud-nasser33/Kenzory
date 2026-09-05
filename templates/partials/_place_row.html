@@ -8,7 +8,6 @@
       <h3 class="place-card-title"><a href="/place/{{ place.slug }}">{{ place.title }}</a></h3>
       <span>{{ save_btn(place) }}</span>
     </div>
-    {% if place.title_ar %}<p class="place-card-ar">{{ place.title_ar }}</p>{% endif %}
     <div class="row-badges">
       {{ category_badge(place.category.name) }}
       {% if place.verified %}<span class="badge verified-badge"><i data-lucide="shield-check" class="icon-sm"></i> Verified</span>{% endif %}

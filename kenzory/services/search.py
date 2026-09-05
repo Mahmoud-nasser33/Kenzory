@@ -47,7 +47,6 @@ def query_places(q="", category=None, governorate=None, period=None, sort="featu
             query = query.where(
                 or_(
                     *like(HeritagePlace.title),
-                    *like(HeritagePlace.title_ar),
                     *like(HeritagePlace.summary),
                     *like(HeritagePlace.description),
                     *like(HeritagePlace.location),

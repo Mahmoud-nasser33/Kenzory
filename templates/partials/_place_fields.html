@@ -7,10 +7,6 @@
   {% if errors.get('title') %}<span class="field-error">{{ errors['title'] }}</span>{% endif %}
 </div>
 <div class="field">
-  <label for="title_ar">Name in Arabic <em class="opt">optional</em></label>
-  <input type="text" id="title_ar" name="title_ar" value="{{ form.get('title_ar', '') }}" dir="rtl" placeholder="الاسم بالعربية">
-</div>
-<div class="field">
   <label for="summary">What is it, and why does it matter? <em>*</em></label>
   <textarea id="summary" name="summary" rows="3" required placeholder="At least two sentences — what the place is, what it means to the people who know it.">{{ form.get('summary', '') }}</textarea>
   {% if errors.get('summary') %}<span class="field-error">{{ errors['summary'] }}</span>{% endif %}

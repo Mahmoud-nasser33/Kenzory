@@ -1,0 +1,52 @@
+name: kenzory
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: kenzory
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-kenzory}
+      POSTGRES_DB: kenzory
+    volumes:
+      - kenzory_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kenzory"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      KENZORY_ENV: production
+      DATABASE_URL: postgresql+psycopg2://kenzory:${POSTGRES_PASSWORD:-kenzory}@db:5432/kenzory
+      SECRET_KEY: ${SECRET_KEY}
+      KENZORY_ADMIN_PASSWORD: ${KENZORY_ADMIN_PASSWORD:-}
+      KENZORY_SEED_PASSWORD: ${KENZORY_SEED_PASSWORD:-}
+      MAIL_SERVER: ${MAIL_SERVER:-smtp.gmail.com}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USE_TLS: "true"
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      MAIL_DEFAULT_SENDER: ${MAIL_DEFAULT_SENDER:-noreply@kenzory.org}
+      MAIL_SUPPRESS_SEND: "false"
+    ports:
+      - "8000:8000"
+    volumes:
+      - kenzory_uploads:/app/static/uploads
+      - kenzory_covers:/app/static/img/covers
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8000/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  kenzory_pgdata:
+  kenzory_uploads:
+  kenzory_covers:

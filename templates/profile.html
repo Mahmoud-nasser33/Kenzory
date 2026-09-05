@@ -14,6 +14,7 @@
       <div class="profile-stats">
         <div class="stat"><b>{{ place_count }}</b><span>places</span></div>
         <div class="stat"><b>{{ review_count }}</b><span>reviews</span></div>
+        <div class="stat"><b>{{ trail_count }}</b><span>trails</span></div>
         <div class="stat"><b>{{ photos }}</b><span>photos</span></div>
         <div class="stat"><b>{{ reputation }}</b><span>points</span></div>
       </div>
@@ -38,6 +39,7 @@
         <div class="profile-stats" style="margin-top:18px">
           <div class="profile-stat"><b>{{ place_count }}</b><span>places</span></div>
           <div class="profile-stat"><b>{{ review_count }}</b><span>reviews</span></div>
+          <div class="profile-stat"><b>{{ trail_count }}</b><span>trails</span></div>
           <div class="profile-stat"><b>{{ photos }}</b><span>photos</span></div>
           <div class="profile-stat"><b>{{ counts.pending }}</b><span>pending</span></div>
         </div>
@@ -125,6 +127,19 @@
           </div>
         </article>
         {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if trails %}
+      <div class="section-head" style="margin-top:56px">
+        <div>
+          <div class="eyebrow">Routes</div>
+          <h2 class="section-title">Trails you've curated</h2>
+        </div>
+        <a class="btn btn-outline btn-sm" href="/trails/new">Create a trail</a>
+      </div>
+      <div class="card-grid">
+        {% for trail in trails %}{% include "partials/_trail_card.html" %}{% endfor %}
       </div>
       {% endif %}
     </div>

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}{{ trail.title }} — Trails — Kenzory{% endblock %}
+
+{% block content %}
+<section class="place-hero trail-hero">
+  <img src="{{ trail_image(trail) }}" alt="{{ trail.title }}">
+  <div class="container place-hero-content">
+    <div class="row-badges" style="margin-bottom:14px">
+      <span class="badge category-badge cat-hidden"><i data-lucide="route" class="icon-sm"></i> Walking route</span>
+      <span class="badge category-badge cat-natural"><i data-lucide="map-pin" class="icon-sm"></i> {{ trail.stop_count }} stop{{ 's' if trail.stop_count != 1 }}</span>
+      {% if trail.total_minutes %}<span class="badge category-badge cat-historical"><i data-lucide="clock" class="icon-sm"></i> ~{{ trail.total_minutes }} min</span>{% endif %}
+    </div>
+    <h1>{{ trail.title }}</h1>
+    <div class="place-hero-meta">
+      {% if trail.creator %}
+      <span style="display:inline-flex;align-items:center;gap:6px"><span class="byline-avatar">{{ trail.creator.initials }}</span> Curated by {{ trail.creator.display }}</span>
+      {% endif %}
+      <span style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="calendar" class="icon"></i>{{ trail.created_at|timeago }}</span>
+      <span style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="layers" class="icon"></i>{{ trail.places|selectattr('latitude')|list|length }} places on the map</span>
+    </div>
+    <div class="place-hero-actions">
+      {% if current_user.is_authenticated and (current_user.is_admin or trail.created_by == current_user.id) %}
+      <a class="btn btn-outline btn-sm" href="/trails/{{ trail.slug }}/edit" style="border-color:oklch(1 0 0 / .3);color:var(--primary-foreground)">
+        <i data-lucide="pencil" class="icon-sm"></i> Edit
+      </a>
+      <form method="post" action="/trails/{{ trail.slug }}/delete" onsubmit="return confirm('Delete this trail?')">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="btn btn-outline btn-sm" style="border-color:oklch(1 0 0 / .3);color:var(--primary-foreground)">
+          <i data-lucide="trash-2" class="icon-sm"></i> Delete
+        </button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<div class="container trail-body">
+  <div class="trail-intro">
+    {% if trail.summary %}<p class="trail-summary">{{ trail.summary }}</p>{% endif %}
+    {% if trail.description %}<p>{{ trail.description }}</p>{% endif %}
+  </div>
+
+  {% if trail.stops %}
+  <div class="trail-map-wrap surface-card">
+    <h2 style="font-family:var(--font-display);font-size:1.3rem;margin-bottom:12px">The route</h2>
+    <div id="trail-map" style="height:320px;border-radius:12px;overflow:hidden"></div>
+  </div>
+
+  <h2 style="font-family:var(--font-display);font-size:1.5rem;margin:28px 0 16px">Stops in order</h2>
+  <div class="feed-list">
+    {% for stop in trail.stops %}
+    <article class="surface-card feed-item trail-stop">
+      <div class="trail-stop-num">{{ loop.index }}</div>
+      <div class="sub-thumb">
+        <a href="/place/{{ stop.place.slug }}">
+          <img src="{{ place_image(stop.place) }}" alt="{{ stop.place.title }}" loading="lazy">
+        </a>
+      </div>
+      <div>
+        <div class="row-badges" style="margin-bottom:8px">
+          <span class="badge category-badge {{ category_meta.get(stop.place.category.name, {}).get('tone', 'cat-hidden') }}">{{ stop.place.category.name }}</span>
+          {% if stop.place.verified %}<span class="badge verified-badge"><i data-lucide="shield-check" class="icon-sm"></i> Verified</span>{% endif %}
+        </div>
+        <h3 class="trail-stop-title"><a href="/place/{{ stop.place.slug }}">{{ stop.place.title }}</a></h3>
+        <p>{{ stop.place.summary }}</p>
+        <div class="feed-meta">
+          <span><i data-lucide="map-pin" class="icon-sm"></i> {{ stop.place.location }}, {{ stop.place.governorate }}</span>
+          {% if stop.place.visit_minutes %}<span><i data-lucide="clock" class="icon-sm"></i> {{ stop.place.visit_minutes }} min</span>{% endif %}
+          {% if stop.note %}<span><i data-lucide="quote" class="icon-sm"></i> {{ stop.note }}</span>{% endif %}
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state" style="margin-top:24px">
+    <div class="empty-icon"><i data-lucide="route" class="icon-lg"></i></div>
+    <h3>This trail has no stops yet</h3>
+    <p>Someone forgot to finish marking the route.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', filename='vendor/leaflet/css/leaflet.css') }}">
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='vendor/leaflet/js/leaflet.js') }}"></script>
+<script>
+  window.TRAIL_STOPS = {{ stop_meta|tojson }};
+</script>
+<script src="{{ url_for('static', filename='js/trail.js') }}"></script>
+{% endblock %}

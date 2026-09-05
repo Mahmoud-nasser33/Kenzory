@@ -29,7 +29,7 @@
           <span class="badge status-badge st-pending">{{ vote_counts.get(s.id, 0) }} endorsement{{ 's' if vote_counts.get(s.id, 0) != 1 }}</span>
           {% if s.category %}{{ category_badge(s.category.name) }}{% endif %}
         </div>
-        <h3>{{ s.title }}{% if s.title_ar %} <span class="ar" style="font-weight:400">· {{ s.title_ar }}</span>{% endif %}</h3>
+        <h3>{{ s.title }}</h3>
         <p>{{ s.summary }}</p>
         <div class="feed-meta">
           {% if s.location %}<span><i data-lucide="map-pin" class="icon-sm"></i> {{ s.location }}{% if s.governorate %}, {{ s.governorate }}{% endif %}</span>{% endif %}

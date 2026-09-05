@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit trail' if mode == 'edit' else 'Create a trail' }} — Kenzory{% endblock %}
+
+{% block content %}
+<div class="page-head add-place-head">
+  <div class="container">
+    <div class="eyebrow">Heritage trails</div>
+    <h1 class="page-title">{{ 'Edit trail' if mode == 'edit' else 'Create a walking route' }}</h1>
+    <p class="page-sub">String published discoveries into an ordered route others can follow. Pick at least two places, in the order to visit them.</p>
+  </div>
+</div>
+
+<div class="container add-place-layout">
+  <div class="surface-card form-card">
+    <form method="post" action="{{ '/trails/' ~ trail.slug ~ '/edit' if mode == 'edit' else '/trails/new' }}" class="stack-form" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <h2 class="form-section-title">The route</h2>
+      <div class="field">
+        <label for="title">Trail name <em>*</em></label>
+        <input type="text" id="title" name="title" value="{{ form.get('title', '') }}" required placeholder="e.g. A morning in Old Cairo's gates">
+        {% if errors.get('title') %}<span class="field-error">{{ errors['title'] }}</span>{% endif %}
+      </div>
+      <div class="field">
+        <label for="summary">Why should someone walk this route? <em>*</em></label>
+        <textarea id="summary" name="summary" rows="3" required placeholder="At least two sentences — where it starts, what it threads together, and what makes the sequence worth following.">{{ form.get('summary', '') }}</textarea>
+        {% if errors.get('summary') %}<span class="field-error">{{ errors['summary'] }}</span>{% endif %}
+      </div>
+      <div class="field">
+        <label for="description">More detail <em class="opt">optional</em></label>
+        <textarea id="description" name="description" rows="4" placeholder="Logistics, sightlines, where to pause for tea…">{{ form.get('description', '') }}</textarea>
+      </div>
+
+      <h2 class="form-section-title">Stops — in the order to visit them</h2>
+      {% if errors.get('places') %}<div class="field-error" style="margin-bottom:12px;display:block">{{ errors['places'] }}</div>{% endif %}
+
+      <div class="trail-picker" data-places="{{ places_picker|tojson }}" data-selected="{{ form.get('place_ids', [])|tojson }}">
+        <div class="trail-picker-search">
+          <i data-lucide="search" class="icon"></i>
+          <input type="text" class="trail-picker-filter" placeholder="Search places to add…" aria-label="Search places">
+        </div>
+
+        <div class="trail-picker-layout">
+          <div class="trail-picker-available">
+            <div class="trail-picker-head">Available places</div>
+            <div class="trail-picker-list" role="listbox" aria-label="Available places"></div>
+          </div>
+          <div class="trail-picker-route">
+            <div class="trail-picker-head">Your route <span class="trail-picker-count">0 stops</span></div>
+            <div class="trail-picker-stops"></div>
+            <p class="trail-picker-hint">Places appear here in the order you add them. Reorder with the arrows.</p>
+          </div>
+        </div>
+      </div>
+
+      <input type="hidden" name="place_ids" id="place_ids" value="">
+
+      <button type="submit" class="btn btn-accent btn-block btn-lg">{{ 'Save changes' if mode == 'edit' else 'Publish trail' }}</button>
+    </form>
+  </div>
+
+  <aside class="add-place-side">
+    <div class="surface-card sidebar-card">
+      <h3>What makes a good trail</h3>
+      <ul class="timeline">
+        <li>Places genuinely close in distance — walkable in a morning or a day.</li>
+        <li>A clear order: heritage sites first, then the cafes and craft lanes.</li>
+        <li>A route that tells one story: "the gates of Cairo", "salt and silence in the desert".</li>
+      </ul>
+    </div>
+    <div class="surface-card sidebar-card">
+      <h3>After you publish</h3>
+      <ul class="timeline">
+        <li>Your trail appears instantly on the <a href="/trails">Trails page</a>.</li>
+        <li>Anyone can follow it — the stops point back to the full place records.</li>
+        <li>You can edit or delete your own route any time.</li>
+      </ul>
+    </div>
+  </aside>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script>window.PLACES_FOR_TRAIL = {{ places_picker|tojson }};</script>
+<script src="{{ url_for('static', filename='js/trail-form.js') }}"></script>
+{% endblock %}

@@ -44,7 +44,6 @@ def place_json(place):
     return {
         "id": place.slug,
         "name": place.title,
-        "nameAr": place.title_ar or "",
         "category": place.category.name if place.category else "",
         "governorate": place.governorate,
         "region": place.region or "",

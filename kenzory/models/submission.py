@@ -20,7 +20,6 @@ class Submission(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), nullable=False)
-    title_ar = db.Column(db.String(255))
     summary = db.Column(db.Text, nullable=False, default="")
     description = db.Column(db.Text, nullable=False, default="")
     historical_information = db.Column(db.Text)

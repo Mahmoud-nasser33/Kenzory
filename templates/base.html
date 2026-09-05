@@ -22,6 +22,7 @@
     <nav class="main-nav" aria-label="Primary">
       <a href="/explore" {% if request.path.startswith('/explore') %}class="active"{% endif %}>Explore</a>
       <a href="/map" {% if request.path.startswith('/map') %}class="active"{% endif %}>Map</a>
+      <a href="/trails" {% if request.path.startswith('/trails') %}class="active"{% endif %}>Trails</a>
       <a href="/stories" {% if request.path.startswith('/stories') %}class="active"{% endif %}>Stories</a>
       <a href="/about" {% if request.path.startswith('/about') %}class="active"{% endif %}>About</a>
     </nav>
@@ -91,14 +92,16 @@
     <a class="drawer-link" href="/explore"><i data-lucide="search" class="icon"></i> Explore</a>
     <button type="button" class="drawer-link" id="drawer-theme-toggle"><i data-lucide="moon" class="icon"></i> <span id="drawer-theme-label">Dark mode</span></button>
     <a class="drawer-link" href="/map"><i data-lucide="map" class="icon"></i> Map</a>
+    <a class="drawer-link" href="/trails"><i data-lucide="route" class="icon"></i> Trails</a>
     <a class="drawer-link" href="/stories"><i data-lucide="book-open" class="icon"></i> Stories</a>
     <a class="drawer-link" href="/about"><i data-lucide="info" class="icon"></i> About</a>
     <a class="drawer-link" href="/saved"><i data-lucide="bookmark" class="icon"></i> Saved</a>
     {% if current_user.is_authenticated %}
       <a class="drawer-link" href="/profile"><i data-lucide="user" class="icon"></i> My profile</a>
       <a class="drawer-link" href="/notifications"><i data-lucide="bell" class="icon"></i> Notifications</a>
-      <a class="drawer-link" href="/submissions"><i data-lucide="layers" class="icon"></i> My submissions</a>
-      <a class="drawer-link" href="/community-review"><i data-lucide="thumbs-up" class="icon"></i> Community review</a>
+<a class="drawer-link" href="/submissions"><i data-lucide="layers" class="icon"></i> My submissions</a>
+        <a class="drawer-link" href="/community-review"><i data-lucide="thumbs-up" class="icon"></i> Community review</a>
+        <a class="drawer-link" href="/trails/new"><i data-lucide="route" class="icon"></i> Create a trail</a>
       {% if current_user.is_admin %}
       <a class="drawer-link" href="/admin"><i data-lucide="shield" class="icon"></i> Admin dashboard</a>
       {% endif %}
@@ -154,6 +157,7 @@
         <h5>Heritage</h5>
         <ul>
           <li><a href="/stories">Stories</a></li>
+          <li><a href="/trails">Walking trails</a></li>
           <li><a href="/map">Interactive map</a></li>
           <li><a href="/discoveries">Latest discoveries</a></li>
           <li><a href="/about">How Kenzory works</a></li>

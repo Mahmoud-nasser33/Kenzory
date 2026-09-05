@@ -27,7 +27,6 @@ def approve_submission(submission, reviewer, note=None):
         image = ensure_cover(
             slugify(submission.title) or f"place-{submission.id}",
             submission.category.name if submission.category else "Hidden Gems",
-            submission.title_ar or "",
             submission.title,
             submission.location,
         )
@@ -35,7 +34,6 @@ def approve_submission(submission, reviewer, note=None):
     place = HeritagePlace(
         slug=unique_slug(submission.title),
         title=submission.title,
-        title_ar=submission.title_ar,
         summary=submission.summary or "",
         description=submission.description or submission.summary or "",
         historical_background=submission.historical_information,
