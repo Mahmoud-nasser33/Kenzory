@@ -3,6 +3,8 @@
 
 A community heritage map of Egypt. Register, add a heritage place with photos and description, and see it on the map once an admin approves it — or curate walking routes that string approved places into a guided trail.
 
+> **Note:** The app is under testing and not finished yet, coming soon.
+
 ## What's built
 
 - Discovery with search, filters (category, governorate, period), and pagination
